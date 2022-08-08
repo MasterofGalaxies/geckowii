@@ -596,9 +596,11 @@ namespace GeckoApp
             {
                 lastAddress = startAddress;   
             }
-            
-            DumpRange addRange = new DumpRange(lastAddress);
-            addRange.streamOffset = lastAddress - startAddress;
+
+            DumpRange addRange = new DumpRange(lastAddress)
+            {
+                streamOffset = lastAddress - startAddress
+            };
 
             // Check from lowIndex to highIndex in resultAddressList for dump ranges
             for (int i = lowIndex + 1; i <= highIndex; i++)
@@ -610,8 +612,10 @@ namespace GeckoApp
                         addRange.endAddress - addRange.startAddress;
                     dumpranges.Add(addRange);
                     lastAddress = resultAddressList[i];
-                    addRange = new DumpRange(lastAddress);
-                    addRange.streamOffset = lastAddress - startAddress;
+                    addRange = new DumpRange(lastAddress)
+                    {
+                        streamOffset = lastAddress - startAddress
+                    };
                 }
                 lastAddress = resultAddressList[i];
             }
@@ -1375,7 +1379,7 @@ namespace GeckoApp
                 default: bufferlength = 4; break;
             }
 
-            this.sSize = searchSize;
+            sSize = searchSize;
 
             bool floatCompare = searchSize == SearchSize.Single;
 
@@ -1645,8 +1649,10 @@ namespace GeckoApp
                 return true;
             }
 
-            ZipOutputStream resultStream = new ZipOutputStream(path);
-            resultStream.CompressionLevel = Ionic.Zlib.CompressionLevel.BestSpeed;
+            ZipOutputStream resultStream = new ZipOutputStream(path)
+            {
+                CompressionLevel = Ionic.Zlib.CompressionLevel.BestSpeed
+            };
             resultStream.PutNextEntry("ResList");
 
             // good first guess
@@ -1926,8 +1932,10 @@ namespace GeckoApp
         {
             // We want the list to match the sorting of the grid view
             // This way if they, say, delete an element on the grid view, it finds the right index in the list
-            SearchResultComparer comparer = new SearchResultComparer();
-            comparer.sortedColumn = gView.SortedColumn.Index;
+            SearchResultComparer comparer = new SearchResultComparer
+            {
+                sortedColumn = gView.SortedColumn.Index
+            };
             if (gView.SortOrder == SortOrder.Descending)
             {
                 comparer.descending = true;

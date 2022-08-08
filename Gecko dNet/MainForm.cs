@@ -74,11 +74,14 @@ namespace GeckoApp
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            this.Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetEntryAssembly().Location);
+            var path = $"{AppDomain.CurrentDomain.BaseDirectory}\\{AppDomain.CurrentDomain.FriendlyName}.exe";
+            Icon = Icon.ExtractAssociatedIcon(path);
 
             int i;
-            SettingsFile = new Xml("gecko.xml");
-            SettingsFile.RootName = "gecko";
+            SettingsFile = new Xml("gecko.xml")
+            {
+                RootName = "gecko"
+            };
 
             gamename = "";
             gecko = new USBGecko();
@@ -481,12 +484,12 @@ namespace GeckoApp
 
                     int gameVer = ((int)(name[i + 1])) + 1;
 
-                    this.Text = "Gecko dotNET (" + gamename;
+                    Text = "Gecko dotNET (" + gamename;
                     if (gameVer != 1)
                     {
-                        this.Text += " version " + (gameVer).ToString();
+                        Text += " version " + (gameVer).ToString();
                     }
-                    this.Text += ")";
+                    Text += ")";
 
                     if (gamenameChanged)
                     {
@@ -502,7 +505,7 @@ namespace GeckoApp
                     CUSBGecko.Text = "Connect to Gecko";
                     StatusCap.Text = "No USB Gecko connection availible!";
 
-                    this.Text = "Gecko dotNET";
+                    Text = "Gecko dotNET";
                 }
             }
             catch (EUSBGeckoException exc)
@@ -1658,8 +1661,10 @@ namespace GeckoApp
             if (openBinary.ShowDialog() == DialogResult.OK)
             {
                 uint vAdd = viewer.selectedAddress;
-                FileStream fs = new FileStream(openBinary.FileName, FileMode.Open, FileAccess.Read);
-                fs.Position = 0;
+                FileStream fs = new FileStream(openBinary.FileName, FileMode.Open, FileAccess.Read)
+                {
+                    Position = 0
+                };
                 uint endAdd = vAdd + (uint)fs.Length;
                 if (!ValidMemory.validAddress(endAdd))
                 {

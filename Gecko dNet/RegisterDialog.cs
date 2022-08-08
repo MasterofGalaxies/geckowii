@@ -30,7 +30,7 @@ namespace GeckoApp
             RValue.Text = GlobalFunctions.toHex(value);
             setValue = value;
 
-            if (this.ShowDialog() == DialogResult.OK)
+            if (ShowDialog() == DialogResult.OK)
             {
                 value = setValue;
                 return true;

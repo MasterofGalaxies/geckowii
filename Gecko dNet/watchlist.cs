@@ -555,8 +555,10 @@ namespace GeckoApp
             if (!File.Exists(fileName))
                 return false;
 
-            Xml watchList = new Xml(fileName);
-            watchList.RootName = "watchlist";
+            Xml watchList = new Xml(fileName)
+            {
+                RootName = "watchlist"
+            };
             string[] sections = watchList.GetSectionNames();
 
             if (sections.Length == 0)
@@ -612,8 +614,10 @@ namespace GeckoApp
             if (File.Exists(fileName))
                 File.Delete(fileName);
 
-            Xml watchList = new Xml(fileName);
-            watchList.RootName = "watchlist";
+            Xml watchList = new Xml(fileName)
+            {
+                RootName = "watchlist"
+            };
 
             WatchEntry current;
             string section;

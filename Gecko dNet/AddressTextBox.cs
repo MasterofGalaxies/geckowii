@@ -40,31 +40,31 @@ namespace GeckoApp.external
         public AddressTextBox()
         {
             InitializeComponent();
-            this.Width = 62;
-            this.MaxLength = 8;
+            Width = 62;
+            MaxLength = 8;
             CharacterCasing = CharacterCasing.Upper;
-            this.Font = new Font("Courier New", (float)8.25);
-            comboBoxHistory.Parent = this.Parent;
-            comboBoxHistory.Location = this.Location;
-            comboBoxHistory.Width = this.Width;
-            comboBoxHistory.MaxLength = this.MaxLength;
-            comboBoxHistory.Font = this.Font;
+            Font = new Font("Courier New", (float)8.25);
+            comboBoxHistory.Parent = Parent;
+            comboBoxHistory.Location = Location;
+            comboBoxHistory.Width = Width;
+            comboBoxHistory.MaxLength = MaxLength;
+            comboBoxHistory.Font = Font;
 
             colorAddressBad = Color.FromArgb(255, 200, 200);
-            colorAddressGood = this.BackColor;
+            colorAddressGood = BackColor;
         }
 
         private void AddressTextBox_Layout(object sender, LayoutEventArgs e)
         {
-            comboBoxHistory.Parent = this.Parent;
-            comboBoxHistory.Location = this.Location;
-            comboBoxHistory.Width = this.Width;
+            comboBoxHistory.Parent = Parent;
+            comboBoxHistory.Location = Location;
+            comboBoxHistory.Width = Width;
             comboBoxHistory.DropDownWidth = comboBoxHistory.Width + 15;
         }
 
         private void AddressTextBox_LocationChanged(object sender, EventArgs e)
         {
-            comboBoxHistory.Location = this.Location;
+            comboBoxHistory.Location = Location;
         }
         
         private void AddressTextBox_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -73,7 +73,7 @@ namespace GeckoApp.external
             //comboBoxHistory.BringToFront();
             if (!comboBoxHistory.DroppedDown)
             {
-                comboBoxHistory.SelectedIndex = comboBoxHistory.Items.IndexOf(this.Text);
+                comboBoxHistory.SelectedIndex = comboBoxHistory.Items.IndexOf(Text);
             }
              ShowHistory(true);
        }
@@ -89,7 +89,7 @@ namespace GeckoApp.external
         {
             if (comboBoxHistory.SelectedItem != null)
             {
-                this.Text = comboBoxHistory.SelectedItem.ToString();
+                Text = comboBoxHistory.SelectedItem.ToString();
             }
         }
 
@@ -121,7 +121,7 @@ namespace GeckoApp.external
                     // if showing, and current text is in the history, start with that index
                     if (!comboBoxHistory.DroppedDown)
                     {
-                        index = comboBoxHistory.Items.IndexOf(this.Text);
+                        index = comboBoxHistory.Items.IndexOf(Text);
                     }
                     else
                     {
@@ -136,9 +136,9 @@ namespace GeckoApp.external
                     }
 
 
-                    string oldItem = this.Text;
+                    string oldItem = Text;
                     comboBoxHistory.SelectedIndex = index;
-                    this.Text = oldItem;
+                    Text = oldItem;
                 }
                 handled = true;
                 HistoryShown = true;
@@ -158,15 +158,15 @@ namespace GeckoApp.external
                     }
                     if (!comboBoxHistory.DroppedDown)
                     {
-                        index = comboBoxHistory.Items.IndexOf(this.Text);
+                        index = comboBoxHistory.Items.IndexOf(Text);
                     }
                     else
                     {
                         index--;
                     }
-                    string oldItem = this.Text;
+                    string oldItem = Text;
                     comboBoxHistory.SelectedIndex = index;
-                    this.Text = oldItem;
+                    Text = oldItem;
                 }
                 handled = true;
                 HistoryShown = true;
@@ -192,7 +192,7 @@ namespace GeckoApp.external
             {
                 if (comboBoxHistory.SelectedItem != null)
                 {
-                    this.Text = comboBoxHistory.SelectedItem.ToString();
+                    Text = comboBoxHistory.SelectedItem.ToString();
                 }
             }
 
@@ -205,7 +205,7 @@ namespace GeckoApp.external
                     {
                         CopyHistoryToClipboard();
                         // Prevent the normal ctrl+c that gets handled by KeyPress from replacing our clipboard
-                        this.DeselectAll();
+                        DeselectAll();
                         handled = true;
                         HistoryShown = true;
                     }
@@ -213,7 +213,7 @@ namespace GeckoApp.external
                     {
                         CopyHistoryToClipboard();
                         ClearHistory();
-                        this.DeselectAll();
+                        DeselectAll();
                         handled = true;
                         HistoryShown = true;
                     }
@@ -267,7 +267,7 @@ namespace GeckoApp.external
 
         private void AddressTextBox_TextChanged(object sender, EventArgs e)
         {
-            string text = this.Text;
+            string text = Text;
             if (multiPokeAddress)
             {
                 text = System.Text.RegularExpressions.Regex.Replace(text, "[^A-FMP0-9]", string.Empty);
@@ -276,16 +276,16 @@ namespace GeckoApp.external
             {
                 text = System.Text.RegularExpressions.Regex.Replace(text, "[^A-F0-9]", string.Empty);
             }
-            this.Text = text;
+            Text = text;
 
             // color address text box background according to validity
-            if ((multiPokeAddress && this.Text.Equals("MP")) || IsValid())
+            if ((multiPokeAddress && Text.Equals("MP")) || IsValid())
             {
-                this.BackColor = colorAddressGood;
+                BackColor = colorAddressGood;
             }
             else
             {
-                this.BackColor = colorAddressBad;
+                BackColor = colorAddressBad;
             }
         }
 
@@ -309,7 +309,7 @@ namespace GeckoApp.external
 
         public void AddAddressToHistory()
         {
-            AddAddressToHistory(this.Text);
+            AddAddressToHistory(Text);
         }
 
         public void RemoveAddressFromHistory(string removeMe)
@@ -322,7 +322,7 @@ namespace GeckoApp.external
 
         public void RemoveAddressFromHistory()
         {
-            RemoveAddressFromHistory(this.Text);
+            RemoveAddressFromHistory(Text);
         }
 
         public void ClearHistory()
@@ -418,12 +418,12 @@ namespace GeckoApp.external
 
         public bool IsValidGet(bool showErrorMessages, out uint value)
         {
-            return IsValidGet(this.Text, showErrorMessages, out value);
+            return IsValidGet(Text, showErrorMessages, out value);
         }
 
         public bool IsValidGet(out uint value)
         {
-            return IsValidGet(this.Text, false, out value);
+            return IsValidGet(Text, false, out value);
         }
 
         public bool IsValid(string checkMe, bool showErrorMessages)
@@ -439,7 +439,7 @@ namespace GeckoApp.external
 
         public bool IsValid()
         {
-            return IsValid(this.Text);
+            return IsValid(Text);
         }
 
         public void ShowHistory(bool shown)
@@ -471,7 +471,7 @@ namespace GeckoApp.external
 
         private void AddressTextBox_ContextMenuStripChanged(object sender, EventArgs e)
         {
-            comboBoxHistory.ContextMenuStrip = this.ContextMenuStrip;
+            comboBoxHistory.ContextMenuStrip = ContextMenuStrip;
         }
 
         public void AddOffsetToAddress(string offset)
@@ -498,7 +498,7 @@ namespace GeckoApp.external
             uint address;
             IsValidGet(out address);
             address = (uint)(address + offset);
-            this.Text = string.Format("{0:X}", address);
+            Text = string.Format("{0:X}", address);
         }
     }
 }

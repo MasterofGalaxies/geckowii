@@ -59,11 +59,11 @@ namespace GeckoApp
         {
             DialogResult dr;
 
-            this.inputAddress.Text = "";
-            this.inputName.Text = "New watch";
-            this.DType.SelectedIndex = 2;
+            inputAddress.Text = "";
+            inputName.Text = "New watch";
+            DType.SelectedIndex = 2;
             
-            dr = this.ShowDialog();
+            dr = ShowDialog();
             return (dr == DialogResult.OK);
         }
 
@@ -71,25 +71,25 @@ namespace GeckoApp
         {
             DialogResult dr;
 
-            this.inputAddress.Text = WatchList.addressToString(entry.address);
-            this.inputName.Text = entry.name;
+            inputAddress.Text = WatchList.addressToString(entry.address);
+            inputName.Text = entry.name;
             switch (entry.dataSize)
             {
                 case WatchDataSize.Bit8:
-                    this.DType.SelectedIndex = 0;
+                    DType.SelectedIndex = 0;
                     break;
                 case WatchDataSize.Bit16:
-                    this.DType.SelectedIndex = 1;
+                    DType.SelectedIndex = 1;
                     break;
                 case WatchDataSize.SingleFp:
-                    this.DType.SelectedIndex = 3;
+                    DType.SelectedIndex = 3;
                     break;
                 default:
-                    this.DType.SelectedIndex = 2;
+                    DType.SelectedIndex = 2;
                     break;
             }
             
-            dr = this.ShowDialog();
+            dr = ShowDialog();
             return (dr == DialogResult.OK);
         }
 

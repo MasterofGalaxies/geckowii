@@ -31,11 +31,13 @@ namespace GeckoApp
 
         public void SaveSearchBackground(int index, List<uint> resultsList, Dump searchDump)
         {
-            SearchItem foo = new SearchItem();
-            // make a copy in case the user starts deleting, sorting, etc the original list
-            foo.resultsList = new List<uint>(resultsList);
-            foo.searchDump = searchDump;
-            foo.index = index;
+            SearchItem foo = new SearchItem
+            {
+                // make a copy in case the user starts deleting, sorting, etc the original list
+                resultsList = new List<uint>(resultsList),
+                searchDump = searchDump,
+                index = index
+            };
 
             // block in the event of a rapid-fire double call
             while (backgroundWriting) ;
@@ -105,8 +107,10 @@ namespace GeckoApp
 
         public void SaveSearch(string filepath, List<uint> resultsList, Dump searchDump)
         {
-            ZipOutputStream outstream = new ZipOutputStream(filepath);
-            outstream.CompressionLevel = Ionic.Zlib.CompressionLevel.BestSpeed;
+            ZipOutputStream outstream = new ZipOutputStream(filepath)
+            {
+                CompressionLevel = Ionic.Zlib.CompressionLevel.BestSpeed
+            };
             BinaryFormatter formatter = new BinaryFormatter();
 
             // First entry is the dump
@@ -226,8 +230,10 @@ namespace GeckoApp
 
         public void WriteCompressedZip(string filepath)
         {
-            ZipOutputStream outstream = new ZipOutputStream(filepath);
-            outstream.CompressionLevel = Ionic.Zlib.CompressionLevel.BestSpeed;
+            ZipOutputStream outstream = new ZipOutputStream(filepath)
+            {
+                CompressionLevel = Ionic.Zlib.CompressionLevel.BestSpeed
+            };
             BinaryFormatter formatter = new BinaryFormatter();
             outstream.PutNextEntry("dump");
 

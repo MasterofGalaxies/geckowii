@@ -36,13 +36,17 @@ namespace GeckoApp
 
         private void CreateSheet(Sheet data)
         {
-            TabPage newTab = new TabPage();
-            newTab.Tag = data;
-            NotePage noteData = new NotePage(newTab, this);
-            noteData.Location = new Point(0, 0);
-            noteData.Size = newTab.Size;
-            noteData.Anchor = AnchorStyles.Bottom | AnchorStyles.Top |
-                              AnchorStyles.Right | AnchorStyles.Left;
+            TabPage newTab = new TabPage
+            {
+                Tag = data
+            };
+            NotePage noteData = new NotePage(newTab, this)
+            {
+                Location = new Point(0, 0),
+                Size = newTab.Size,
+                Anchor = AnchorStyles.Bottom | AnchorStyles.Top |
+                              AnchorStyles.Right | AnchorStyles.Left
+            };
             newTab.Controls.Add(noteData);
             UpdateTitle(newTab);
             SheetSelection.TabPages.Add(newTab);
@@ -213,7 +217,7 @@ namespace GeckoApp
 
         private void NoteSheets_Load(object sender, EventArgs e)
         {
-            this.Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetEntryAssembly().Location);
+            Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetEntryAssembly().Location);
         }
 
         private void SheetSelection_MouseUp(object sender, MouseEventArgs e)

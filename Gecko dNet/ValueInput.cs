@@ -19,10 +19,10 @@ namespace GeckoApp
 
         public bool ShowDialog(uint address, ref uint value,int maxLength)
         {
-            this.InstLab.Text = "Poking address " + GlobalFunctions.toHex(address)+":";
-            this.PValue.Text = GlobalFunctions.toHex(value, maxLength);
-            this.PValue.MaxLength = maxLength;
-            bool result = (this.ShowDialog() == DialogResult.OK);
+            InstLab.Text = "Poking address " + GlobalFunctions.toHex(address)+":";
+            PValue.Text = GlobalFunctions.toHex(value, maxLength);
+            PValue.MaxLength = maxLength;
+            bool result = (ShowDialog() == DialogResult.OK);
             if (result)
                 value = inputValue;
             return result;

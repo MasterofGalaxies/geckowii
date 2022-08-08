@@ -31,7 +31,7 @@ namespace GeckoApp
 
         public int CompareTo(subFile other)
         {
-            return string.Compare(this.name, other.name);
+            return string.Compare(name, other.name);
         }
     }
 
@@ -76,7 +76,7 @@ namespace GeckoApp
 
         public int CompareTo(fileStructure other)
         {
-            return string.Compare(this.name, other.name);
+            return string.Compare(name, other.name);
         }
 
         public void Sort()
@@ -90,7 +90,7 @@ namespace GeckoApp
         public void ToTreeView(TreeView tv)
         {
             tv.Nodes.Clear();
-            TreeNode root = tv.Nodes.Add(this.name);
+            TreeNode root = tv.Nodes.Add(name);
             TreeNode subnode;
             foreach (fileStructure nFS in subFolders)
             {

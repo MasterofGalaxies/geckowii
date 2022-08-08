@@ -23,31 +23,31 @@ namespace GeckoApp.external
         {
             InitializeComponent();
 
-            comboBoxHistory.Parent = this.Parent;
-            comboBoxHistory.Location = this.Location;
-            comboBoxHistory.Width = this.Width;
-            comboBoxHistory.MaxLength = this.MaxLength;
-            comboBoxHistory.Font = this.Font;
+            comboBoxHistory.Parent = Parent;
+            comboBoxHistory.Location = Location;
+            comboBoxHistory.Width = Width;
+            comboBoxHistory.MaxLength = MaxLength;
+            comboBoxHistory.Font = Font;
         }
 
         private void HistoryTextBox_Layout(object sender, LayoutEventArgs e)
         {
-            comboBoxHistory.Parent = this.Parent;
-            comboBoxHistory.Location = this.Location;
-            comboBoxHistory.Width = this.Width;
+            comboBoxHistory.Parent = Parent;
+            comboBoxHistory.Location = Location;
+            comboBoxHistory.Width = Width;
             comboBoxHistory.DropDownWidth = comboBoxHistory.Width + 15;
         }
 
         private void HistoryTextBox_LocationChanged(object sender, EventArgs e)
         {
-            comboBoxHistory.Location = this.Location;
+            comboBoxHistory.Location = Location;
         }
         
         private void HistoryTextBox_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (!comboBoxHistory.DroppedDown)
             {
-                comboBoxHistory.SelectedIndex = comboBoxHistory.Items.IndexOf(this.Text);
+                comboBoxHistory.SelectedIndex = comboBoxHistory.Items.IndexOf(Text);
             }
             ShowHistory(true);
        }
@@ -61,7 +61,7 @@ namespace GeckoApp.external
         {
             if (comboBoxHistory.SelectedItem != null)
             {
-                this.Text = comboBoxHistory.SelectedItem.ToString();
+                Text = comboBoxHistory.SelectedItem.ToString();
             }
         }
 
@@ -83,7 +83,7 @@ namespace GeckoApp.external
                     // if showing, and current text is in the history, start with that index
                     if (!comboBoxHistory.DroppedDown)
                     {
-                        index = comboBoxHistory.Items.IndexOf(this.Text);
+                        index = comboBoxHistory.Items.IndexOf(Text);
                     }
                     else
                     {
@@ -98,9 +98,9 @@ namespace GeckoApp.external
                     }
 
 
-                    string oldItem = this.Text;
+                    string oldItem = Text;
                     comboBoxHistory.SelectedIndex = index;
-                    this.Text = oldItem;
+                    Text = oldItem;
                 }
                 handled = true;
                 HistoryShown = true;
@@ -120,15 +120,15 @@ namespace GeckoApp.external
                     }
                     if (!comboBoxHistory.DroppedDown)
                     {
-                        index = comboBoxHistory.Items.IndexOf(this.Text);
+                        index = comboBoxHistory.Items.IndexOf(Text);
                     }
                     else
                     {
                         index--;
                     }
-                    string oldItem = this.Text;
+                    string oldItem = Text;
                     comboBoxHistory.SelectedIndex = index;
-                    this.Text = oldItem;
+                    Text = oldItem;
                 }
                 handled = true;
                 HistoryShown = true;
@@ -154,7 +154,7 @@ namespace GeckoApp.external
             {
                 if (comboBoxHistory.SelectedItem != null)
                 {
-                    this.Text = comboBoxHistory.SelectedItem.ToString();
+                    Text = comboBoxHistory.SelectedItem.ToString();
                 }
             }
 
@@ -167,7 +167,7 @@ namespace GeckoApp.external
                     {
                         CopyHistoryToClipboard();
                         // Prevent the normal ctrl+c that gets handled by KeyPress from replacing our clipboard
-                        this.DeselectAll();
+                        DeselectAll();
                         handled = true;
                         HistoryShown = true;
                     }
@@ -175,7 +175,7 @@ namespace GeckoApp.external
                     {
                         CopyHistoryToClipboard();
                         ClearHistory();
-                        this.DeselectAll();
+                        DeselectAll();
                         handled = true;
                         HistoryShown = true;
                     }
@@ -242,7 +242,7 @@ namespace GeckoApp.external
 
         public void AddTextToHistory()
         {
-            AddTextToHistory(this.Text);
+            AddTextToHistory(Text);
         }
 
         public void RemoveTextFromHistory(string removeMe)
@@ -255,7 +255,7 @@ namespace GeckoApp.external
 
         public void RemoveTextFromHistory()
         {
-            RemoveTextFromHistory(this.Text);
+            RemoveTextFromHistory(Text);
         }
 
         public void ClearHistory()
@@ -336,7 +336,7 @@ namespace GeckoApp.external
 
         private void HistoryTextBox_ContextMenuStripChanged(object sender, EventArgs e)
         {
-            comboBoxHistory.ContextMenuStrip = this.ContextMenuStrip;
+            comboBoxHistory.ContextMenuStrip = ContextMenuStrip;
         }
     }
 }

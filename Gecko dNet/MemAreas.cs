@@ -30,10 +30,10 @@ namespace GeckoApp
 
         public AddressRange(AddressType desc, byte id, uint low, uint high)
         {
-            this.PId = id;
-            this.PDesc = desc;
-            this.PLow = low;
-            this.PHigh = high;
+            PId = id;
+            PDesc = desc;
+            PLow = low;
+            PHigh = high;
         }
 
         public AddressRange(AddressType desc, uint low, uint high) :
