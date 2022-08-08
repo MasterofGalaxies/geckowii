@@ -215,19 +215,19 @@ namespace AMS.Profile
 			}
 		}
 
-		/// <summary>
-		///   Gets or sets the encoding, to be used if the file is created. </summary>
-		/// <exception cref="InvalidOperationException">
-		///   Setting this property if <see cref="Profile.ReadOnly" /> is true. </exception>
-		/// <remarks>
-		///   By default this property is set to <see cref="System.Text.Encoding.UTF8">Encoding.UTF8</see>, but it is only 
-		///   used when the file is not found and needs to be created to write the value. 
-		///   If the file exists, the existing encoding is used and this value is ignored. 
-		///   The <see cref="Profile.Changing" /> event is raised before changing this property.  
-		///   If its <see cref="ProfileChangingArgs.Cancel" /> property is set to true, this method 
-		///   returns immediately without changing this property.  After the property has been changed, 
-		///   the <see cref="Profile.Changed" /> event is raised. </remarks>
-		public Encoding Encoding
+        /// <summary>
+        ///   Gets or sets the encoding, to be used if the file is created. </summary>
+        /// <exception cref="InvalidOperationException">
+        ///   Setting this property if <see cref="Profile.ReadOnly" /> is true. </exception>
+        /// <remarks>
+        ///   By default this property is set to <see cref="Encoding.UTF8">Encoding.UTF8</see>, but it is only 
+        ///   used when the file is not found and needs to be created to write the value. 
+        ///   If the file exists, the existing encoding is used and this value is ignored. 
+        ///   The <see cref="Profile.Changing" /> event is raised before changing this property.  
+        ///   If its <see cref="ProfileChangingArgs.Cancel" /> property is set to true, this method 
+        ///   returns immediately without changing this property.  After the property has been changed, 
+        ///   the <see cref="Profile.Changed" /> event is raised. </remarks>
+        public Encoding Encoding
 		{
 			get 
 			{ 
@@ -342,7 +342,7 @@ namespace AMS.Profile
 		{
 			get
 			{
-				return XmlDocument.InnerXml == String.Empty;
+				return XmlDocument.InnerXml == string.Empty;
 			}
 		}
 

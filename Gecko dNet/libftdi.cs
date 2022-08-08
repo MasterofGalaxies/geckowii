@@ -61,11 +61,11 @@ namespace libftdi
         
         [DllImport("ftdi")]
         private static extern int ftdi_read_data_set_chunksize(
-            ref ftdi_context ftdi, UInt32 chunksize);
+            ref ftdi_context ftdi, uint chunksize);
         
         [DllImport("ftdi")]
         private static extern int ftdi_write_data_set_chunksize(
-            ref ftdi_context ftdi, UInt32 chunksize);
+            ref ftdi_context ftdi, uint chunksize);
 
         [DllImport("ftdi")]
         private static extern int ftdi_usb_purge_rx_buffer(ref ftdi_context ftdi);
@@ -77,10 +77,10 @@ namespace libftdi
         private static extern int ftdi_read_chipid(ref ftdi_context ftdi, ref int chipid);
 
         [DllImport("ftdi")]
-        private static extern int ftdi_read_data(ref ftdi_context ftdi, Byte[] buf, int size);
+        private static extern int ftdi_read_data(ref ftdi_context ftdi, byte[] buf, int size);
 
         [DllImport("ftdi")]
-        private static extern int ftdi_write_data(ref ftdi_context ftdi, Byte[] buf, int size);
+        private static extern int ftdi_write_data(ref ftdi_context ftdi, byte[] buf, int size);
 
 #if BUILD_STRUCT
 		private ftdi_context FFTHandle;
@@ -92,13 +92,13 @@ namespace libftdi
 		{
         }
 
-        public FT_STATUS GetNumberOfDevices(ref UInt32 deviceCount)
+        public FT_STATUS GetNumberOfDevices(ref uint deviceCount)
         {
             deviceCount=1;
             return FT_STATUS.FT_OK;
         }
 
-        public FT_STATUS OpenBySerialNumber(String serial)
+        public FT_STATUS OpenBySerialNumber(string serial)
         {
 
 //			fixed (ftdi_context *foo = &FFTHandle)
@@ -147,12 +147,12 @@ namespace libftdi
                 return FT_STATUS.FT_FAIL;
         }
 
-        public FT_STATUS SetTimeouts(UInt32 rT, UInt32 wt)
+        public FT_STATUS SetTimeouts(uint rT, uint wt)
         {
             return FT_STATUS.FT_OK;
         }
 
-        public FT_STATUS InTransferSize(UInt32 transfer) {
+        public FT_STATUS InTransferSize(uint transfer) {
 			int status;
 #if BUILD_STRUCT
             status = ftdi_read_data_set_chunksize(ref FFTHandle, transfer);
@@ -192,7 +192,7 @@ namespace libftdi
                 return FT_STATUS.FT_FAIL;
         }
 
-        public FT_STATUS Purge(UInt32 buffer)
+        public FT_STATUS Purge(uint buffer)
         {
 			int status;
 			
@@ -218,7 +218,7 @@ namespace libftdi
                 return FT_STATUS.FT_FAIL;            
         }
 
-        public FT_STATUS Read(Byte[] buffer, UInt32 nobytes, ref UInt32 bytes_read)
+        public FT_STATUS Read(byte[] buffer, uint nobytes, ref uint bytes_read)
         {
             int read = 0, loopCounter = 0;
 			const int loopLimit = 100;
@@ -238,7 +238,7 @@ namespace libftdi
 				unsafe { read = ftdi_read_data(ref (*(((ftdi_context*)PFFTHandle))), buffer, (int)nobytes); }
 #endif
 			}
-			bytes_read = (UInt32)read;
+			bytes_read = (uint)read;
 #if DEBUG
 			System.Console.WriteLine("LFTDI::Read() " + read + " bytes");
 #endif
@@ -250,7 +250,7 @@ namespace libftdi
                 return FT_STATUS.FT_OK;
         }
 
-        public FT_STATUS Write(Byte[] buffer, Int32 nobytes, ref UInt32 bytes_written)
+        public FT_STATUS Write(byte[] buffer, int nobytes, ref uint bytes_written)
         {
             int write;
 #if BUILD_STRUCT
@@ -258,7 +258,7 @@ namespace libftdi
 #else
 			unsafe { write = ftdi_write_data(ref (*(((ftdi_context*)PFFTHandle))), buffer, (int)nobytes); }
 #endif
-            bytes_written = (UInt32)write;
+            bytes_written = (uint)write;
 #if DEBUG
 			System.Console.WriteLine("LFTDI::Write() " + write + " bytes");
 #endif

@@ -267,14 +267,14 @@ namespace GeckoApp.external
 
         private void AddressTextBox_TextChanged(object sender, EventArgs e)
         {
-            String text = this.Text;
+            string text = this.Text;
             if (multiPokeAddress)
             {
-                text = System.Text.RegularExpressions.Regex.Replace(text, "[^A-FMP0-9]", String.Empty);
+                text = System.Text.RegularExpressions.Regex.Replace(text, "[^A-FMP0-9]", string.Empty);
             }
             else
             {
-                text = System.Text.RegularExpressions.Regex.Replace(text, "[^A-F0-9]", String.Empty);
+                text = System.Text.RegularExpressions.Regex.Replace(text, "[^A-F0-9]", string.Empty);
             }
             this.Text = text;
 
@@ -296,9 +296,9 @@ namespace GeckoApp.external
                 comboBoxHistory.Items.Add(addMe);
             }
 
-            if (comboBoxHistory.Items.Contains(String.Empty))
+            if (comboBoxHistory.Items.Contains(string.Empty))
             {
-                comboBoxHistory.Items.Remove(String.Empty);
+                comboBoxHistory.Items.Remove(string.Empty);
             }
         }
 
@@ -347,20 +347,20 @@ namespace GeckoApp.external
             return foo;
         }
 
-        public void CopyStringToHistory(String newHistory)
+        public void CopyStringToHistory(string newHistory)
         {
-            String[] sep = newHistory.Split(new char[] { '\r', '\n' });
-            foreach (String entry in sep)
+            string[] sep = newHistory.Split(new char[] { '\r', '\n' });
+            foreach (string entry in sep)
             {
                 AddAddressToHistory(entry);
             }
         }
 
-        public String GetStringFromHistory()
+        public string GetStringFromHistory()
         {
-            String result = String.Empty;
+            string result = string.Empty;
 
-            foreach (Object entry in comboBoxHistory.Items)
+            foreach (object entry in comboBoxHistory.Items)
             {
                 result += entry.ToString();
                 if (entry != comboBoxHistory.Items[comboBoxHistory.Items.Count-1])
@@ -447,7 +447,7 @@ namespace GeckoApp.external
             comboBoxHistory.Visible = shown;
             if (comboBoxHistory.Items.Count == 0)
             {
-                comboBoxHistory.Items.Add(String.Empty);
+                comboBoxHistory.Items.Add(string.Empty);
             }
             comboBoxHistory.DroppedDown = shown;
             if (shown)
@@ -474,14 +474,14 @@ namespace GeckoApp.external
             comboBoxHistory.ContextMenuStrip = this.ContextMenuStrip;
         }
 
-        public void AddOffsetToAddress(String offset)
+        public void AddOffsetToAddress(string offset)
         {
                 try
                 {
                     bool negative = false;
                     if (offset.Contains("-"))
                     {
-                        offset = offset.Replace("-", String.Empty);
+                        offset = offset.Replace("-", string.Empty);
                         negative = true;
                     }
                     int casted = Convert.ToInt32(offset, 16);
@@ -498,7 +498,7 @@ namespace GeckoApp.external
             uint address;
             IsValidGet(out address);
             address = (uint)(address + offset);
-            this.Text = String.Format("{0:X}", address);
+            this.Text = string.Format("{0:X}", address);
         }
     }
 }

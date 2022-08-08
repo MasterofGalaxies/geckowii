@@ -6,17 +6,17 @@ namespace GeckoApp
 {
     public class Sheet
     {
-        private String PTitle;
-        private String PContent;
+        private string PTitle;
+        private string PContent;
         private NotePage PControl = null;
 
-        public String title
+        public string title
         {
             get { return PTitle; }
             set { PTitle = value; }
         }
 
-        public String content
+        public string content
         {
             get { return PContent; }
             set { PContent = value; }
@@ -28,18 +28,18 @@ namespace GeckoApp
             set { PControl = value; }
         }
 
-        public override String ToString()
+        public override string ToString()
         {
             return PTitle;
         }
 
-        public Sheet(String title, String content)
+        public Sheet(string title, string content)
         {
             PTitle = title;
             PContent = content;
         }
 
-        public Sheet(String title)
+        public Sheet(string title)
             : this(title, "")
         { }
 

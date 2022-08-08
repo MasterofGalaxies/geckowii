@@ -21,70 +21,41 @@ using Ionic.Zip;
 
 namespace FTDIUSBGecko
 {
-    public class ByteSwap
+    public static class ByteSwap
     {
-        public static UInt16 Swap(UInt16 input)
+        public static T Swap<T>(T input) where T : unmanaged
         {
-            if (BitConverter.IsLittleEndian)
-                return ((UInt16)(
-                    ((0xFF00 & input) >> 8) |
-                    ((0x00FF & input) << 8)));
-            else
-                return input;
-        }
-
-        public static UInt32 Swap(UInt32 input)
-        {
-            if (BitConverter.IsLittleEndian)
-                return ((UInt32)(
-                    ((0xFF000000 & input) >> 24) |
-                    ((0x00FF0000 & input) >> 8) |
-                    ((0x0000FF00 & input) << 8) |
-                    ((0x000000FF & input) << 24)));
-            else
-                return input;
-        }
-
-        public static UInt64 Swap(UInt64 input)
-        {
-            if (BitConverter.IsLittleEndian)
-                return ((UInt64)(
-                    ((0xFF00000000000000 & input) >> 56) |
-                    ((0x00FF000000000000 & input) >> 40) |
-                    ((0x0000FF0000000000 & input) >> 24) |
-                    ((0x000000FF00000000 & input) >> 8) |
-                    ((0x00000000FF000000 & input) << 8) |
-                    ((0x0000000000FF0000 & input) << 24) |
-                    ((0x000000000000FF00 & input) << 40) |
-                    ((0x00000000000000FF & input) << 56)));
-            else
-                return input;
+            var size = System.Runtime.CompilerServices.Unsafe.SizeOf<T>();
+            Span<byte> buf = new byte[size];
+            System.Runtime.CompilerServices.Unsafe.As<byte, T>(ref buf[0]) = input;
+            buf.Reverse();
+            return System.Runtime.CompilerServices.Unsafe.As<byte, T>(ref buf[0]);
         }
     }
 
     public class Dump
     {
-        public Dump(UInt32 theStartAddress, UInt32 theEndAddress)
+        public Dump(uint theStartAddress, uint theEndAddress)
         {
             Construct(theStartAddress, theEndAddress, 0);
         }
 
-        public Dump(UInt32 theStartAddress, UInt32 theEndAddress, int theFileNumber)
+        public Dump(uint theStartAddress, uint theEndAddress, int theFileNumber)
         {
             Construct(theStartAddress, theEndAddress, theFileNumber);
         }
 
-        private void Construct(UInt32 theStartAddress, UInt32 theEndAddress, int theFileNumber)
+        private void Construct(uint theStartAddress, uint theEndAddress, int theFileNumber)
         {
             startAddress = theStartAddress;
             endAddress = theEndAddress;
             readCompletedAddress = theStartAddress;
-            mem = new Byte[endAddress - startAddress];
+            mem = new byte[endAddress - startAddress];
             fileNumber = theFileNumber;            
         }
     
 
-        public UInt32 ReadAddress32(UInt32 addressToRead)
+        public uint ReadAddress32(uint addressToRead)
         {
             //dumpStream.Seek(addressToRead - startAddress, SeekOrigin.Begin);
             //byte [] buffer = new byte[4];
@@ -92,41 +63,41 @@ namespace FTDIUSBGecko
             //dumpStream.Read(buffer, 0, 4);
             if (addressToRead < startAddress) return 0;
             if (addressToRead > endAddress - 4) return 0;
-            Byte[] buffer = new Byte[4];
+            byte[] buffer = new byte[4];
             Buffer.BlockCopy(mem, index(addressToRead), buffer, 0, 4);
             //GeckoApp.SubArray<byte> buffer = new GeckoApp.SubArray<byte>(mem, (int)(addressToRead - startAddress), 4);
 
             //Read buffer
-            UInt32 result = BitConverter.ToUInt32(buffer, 0);
+            uint result = BitConverter.ToUInt32(buffer, 0);
 
             //Swap to machine endianness and return
             return ByteSwap.Swap(result);
         }
 
-        private int index(UInt32 addressToRead)
+        private int index(uint addressToRead)
         {
             return (int)(addressToRead - startAddress);
         }
 
-        public UInt32 ReadAddress(UInt32 addressToRead, int numBytes)
+        public uint ReadAddress(uint addressToRead, int numBytes)
         {
             if (addressToRead < startAddress) return 0;
             if (addressToRead > endAddress - numBytes) return 0;
-            
-            Byte[] buffer = new Byte[4];
+
+            byte[] buffer = new byte[4];
             Buffer.BlockCopy(mem, index(addressToRead), buffer, 0, numBytes);
 
             //Read buffer
             switch (numBytes)
             {
                 case 4:
-                    UInt32 result = BitConverter.ToUInt32(buffer, 0);
+                    uint result = BitConverter.ToUInt32(buffer, 0);
 
                     //Swap to machine endianness and return
                     return ByteSwap.Swap(result);
 
                 case 2:
-                    UInt16 result16 = BitConverter.ToUInt16(buffer, 0);
+                    ushort result16 = BitConverter.ToUInt16(buffer, 0);
 
                     //Swap to machine endianness and return
                     return ByteSwap.Swap(result16);
@@ -163,19 +134,19 @@ namespace FTDIUSBGecko
             foo.Dispose();
         }
 
-        public Byte[] mem;
-        private UInt32 startAddress;
-        public UInt32 StartAddress
+        public byte[] mem;
+        private uint startAddress;
+        public uint StartAddress
         {
             get { return startAddress; }
         }
-        private UInt32 endAddress;
-        public UInt32 EndAddress
+        private uint endAddress;
+        public uint EndAddress
         {
             get { return endAddress; }
         }
-        private UInt32 readCompletedAddress;
-        public UInt32 ReadCompletedAddress
+        private uint readCompletedAddress;
+        public uint ReadCompletedAddress
         {
             get { return readCompletedAddress; }
             set { readCompletedAddress = value; }
@@ -243,7 +214,7 @@ namespace FTDIUSBGecko
         GamecubePad
     }
 
-    public delegate void GeckoProgress(UInt32 currentchunk, UInt32 allchunks, UInt32 transferred, UInt32 length, bool okay, bool dump);
+    public delegate void GeckoProgress(uint currentchunk, uint allchunks, uint transferred, uint length, bool okay, bool dump);
 
     public class EUSBGeckoException : Exception
     {
@@ -286,44 +257,44 @@ namespace FTDIUSBGecko
         #endif
 
         #region base constants
-        private const UInt32    packetsize = 0xF800;
-        private const UInt32 uplpacketsize = 0xF80;
+        private const uint packetsize = 0xF800;
+        private const uint uplpacketsize = 0xF80;
 
-        private const Byte      cmd_poke08 = 0x01;
-        private const Byte      cmd_poke16 = 0x02;
-        private const Byte     cmd_pokemem = 0x03;
-        private const Byte     cmd_readmem = 0x04;
-        private const Byte       cmd_pause = 0x06;
-        private const Byte    cmd_unfreeze = 0x07;
-        private const Byte  cmd_breakpoint = 0x09;
-        private const Byte cmd_breakpointx = 0x10;
-        private const Byte    cmd_sendregs = 0x2F;
-        private const Byte     cmd_getregs = 0x30;
-        private const Byte    cmd_cancelbp = 0x38;
-        private const Byte  cmd_sendcheats = 0x40;
-        private const Byte      cmd_upload = 0x41;
-        private const Byte        cmd_hook = 0x42;
-        private const Byte   cmd_hookpause = 0x43;
-        private const Byte        cmd_step = 0x44;
-        private const Byte      cmd_status = 0x50;
-        private const Byte   cmd_cheatexec = 0x60;
-        private const Byte cmd_nbreakpoint = 0x89;
-        private const Byte     cmd_version = 0x99;
+        private const byte cmd_poke08 = 0x01;
+        private const byte cmd_poke16 = 0x02;
+        private const byte cmd_pokemem = 0x03;
+        private const byte cmd_readmem = 0x04;
+        private const byte cmd_pause = 0x06;
+        private const byte cmd_unfreeze = 0x07;
+        private const byte cmd_breakpoint = 0x09;
+        private const byte cmd_breakpointx = 0x10;
+        private const byte cmd_sendregs = 0x2F;
+        private const byte cmd_getregs = 0x30;
+        private const byte cmd_cancelbp = 0x38;
+        private const byte cmd_sendcheats = 0x40;
+        private const byte cmd_upload = 0x41;
+        private const byte cmd_hook = 0x42;
+        private const byte cmd_hookpause = 0x43;
+        private const byte cmd_step = 0x44;
+        private const byte cmd_status = 0x50;
+        private const byte cmd_cheatexec = 0x60;
+        private const byte cmd_nbreakpoint = 0x89;
+        private const byte cmd_version = 0x99;
 
-        private const Byte         GCBPHit = 0x11;
-        private const Byte           GCACK = 0xAA;
-        private const Byte         GCRETRY = 0xBB;
-        private const Byte          GCFAIL = 0xCC;
-        private const Byte          GCDONE = 0xFF;
+        private const byte GCBPHit = 0x11;
+        private const byte GCACK = 0xAA;
+        private const byte GCRETRY = 0xBB;
+        private const byte GCFAIL = 0xCC;
+        private const byte GCDONE = 0xFF;
 
-        private const Byte        GCNewVer = 0x80;
+        private const byte GCNewVer = 0x80;
 
-        private static readonly Byte[] GCAllowedVersions = new Byte[] { GCNewVer };
+        private static readonly byte[] GCAllowedVersions = new byte[] { GCNewVer };
 
-        private const Byte       BPExecute = 0x03;
-        private const Byte          BPRead = 0x05;
-        private const Byte         BPWrite = 0x06;
-        private const Byte     BPReadWrite = 0x07;
+        private const byte BPExecute = 0x03;
+        private const byte BPRead = 0x05;
+        private const byte BPWrite = 0x06;
+        private const byte BPReadWrite = 0x07;
         #endregion
 
         private event GeckoProgress PChunkUpdate;
@@ -387,8 +358,8 @@ namespace FTDIUSBGecko
 
         protected bool InitGecko()
         {
-          UInt32 FT_PURGE_RX = 1;
-            UInt32 FT_PURGE_TX = 2;
+            uint FT_PURGE_RX = 1;
+            uint FT_PURGE_TX = 2;
 
             FT_STATUS ftStatus = FT_STATUS.FT_OK;
             //Reset device
@@ -423,7 +394,7 @@ namespace FTDIUSBGecko
 
             PConnected = false;
 
-            UInt32 ftdiDeviceCount = 0;
+            uint ftdiDeviceCount = 0;
             FT_STATUS ftStatus = FT_STATUS.FT_OK;
 
           ftStatus = PFTDI.GetNumberOfDevices(ref ftdiDeviceCount);
@@ -493,9 +464,9 @@ namespace FTDIUSBGecko
             PFTDI.Close();
         }
 
-        protected FTDICommand GeckoRead(Byte[] recbyte, UInt32 nobytes)
+        protected FTDICommand GeckoRead(byte[] recbyte, uint nobytes)
         {
-            UInt32 bytes_read = 0;
+            uint bytes_read = 0;
 
             FT_STATUS ftStatus = PFTDI.Read(recbyte, nobytes, ref bytes_read);
             if (ftStatus == FT_STATUS.FT_OK)
@@ -513,9 +484,9 @@ namespace FTDIUSBGecko
             return FTDICommand.CMD_OK;
         }
 
-        protected FTDICommand GeckoWrite(Byte[] sendbyte, Int32 nobytes)
+        protected FTDICommand GeckoWrite(byte[] sendbyte, int nobytes)
         {
-            UInt32 bytes_written = 0;
+            uint bytes_written = 0;
 
             FT_STATUS ftStatus = PFTDI.Write(sendbyte, nobytes, ref bytes_written);
          if (ftStatus == FT_STATUS.FT_OK)
@@ -534,7 +505,7 @@ namespace FTDIUSBGecko
         }
 
         //Send update on a running process to the parent class
-        protected void SendUpdate(UInt32 currentchunk, UInt32 allchunks, UInt32 transferred, UInt32 length, bool okay, bool dump)
+        protected void SendUpdate(uint currentchunk, uint allchunks, uint transferred, uint length, bool okay, bool dump)
         {
             if (PChunkUpdate != null)
                 PChunkUpdate(currentchunk, allchunks, transferred, length, okay, dump);
@@ -550,13 +521,13 @@ namespace FTDIUSBGecko
             Dump(dump.StartAddress, dump.EndAddress, dump);
         }
 
-        public void Dump(UInt32 startdump, UInt32 enddump, Stream saveStream)
+        public void Dump(uint startdump, uint enddump, Stream saveStream)
         {
             Stream [] tempStream = { saveStream };
             Dump(startdump, enddump, tempStream);
         }
 
-        public void Dump(UInt32 startdump, UInt32 enddump, Stream[] saveStream)
+        public void Dump(uint startdump, uint enddump, Stream[] saveStream)
         {
             //Reset connection
             InitGecko();
@@ -569,30 +540,30 @@ namespace FTDIUSBGecko
             if (!GeckoApp.ValidMemory.validAddress(startdump)) return;
 
             //How many bytes of data have to be transferred
-            UInt32 memlength = enddump - startdump;
+            uint memlength = enddump - startdump;
 
             //How many chunks do I need to split this data into
             //How big ist the last chunk
-            UInt32 fullchunks = memlength / packetsize;
-            UInt32 lastchunk = memlength % packetsize;
+            uint fullchunks = memlength / packetsize;
+            uint lastchunk = memlength % packetsize;
 
             //How many chunks do I need to transfer
-            UInt32 allchunks = fullchunks;
+            uint allchunks = fullchunks;
             if (lastchunk > 0)
                 allchunks++;
 
-            UInt64 GeckoMemRange = ByteSwap.Swap((UInt64)(((UInt64)startdump << 32) + ((UInt64)enddump)));
+            ulong GeckoMemRange = ByteSwap.Swap((ulong)(((ulong)startdump << 32) + ((ulong)enddump)));
             if (GeckoWrite(BitConverter.GetBytes(cmd_readmem), 1) != FTDICommand.CMD_OK)
                 throw new EUSBGeckoException(EUSBErrorCode.FTDICommandSendError);
 
             //Read reply - expcecting GCACK
-            Byte retry = 0;
+            byte retry = 0;
             while (retry < 10)
             {
-                Byte[] response = new Byte[1];
+                byte[] response = new byte[1];
                 if (GeckoRead(response, 1) != FTDICommand.CMD_OK)
                     throw new EUSBGeckoException(EUSBErrorCode.FTDIReadDataError);
-                Byte reply = response[0];
+                byte reply = response[0];
                 if (reply == GCACK)
                     break;
                 if (retry == 9)
@@ -604,14 +575,14 @@ namespace FTDIUSBGecko
                 throw new EUSBGeckoException(EUSBErrorCode.FTDICommandSendError);
 
             //We start with chunk 0
-            UInt32 chunk = 0;
+            uint chunk = 0;
             retry = 0;
 
             // Reset cancel flag
             bool done = false;
             CancelDump = false;
 
-            Byte[] buffer = new Byte[packetsize]; //read buffer
+            byte[] buffer = new byte[packetsize]; //read buffer
             while (chunk < fullchunks && !done)
             {
                 //No output yet availible
@@ -639,7 +610,7 @@ namespace FTDIUSBGecko
                 //write received package to output stream
                 foreach (Stream stream in saveStream)
                 {
-                    stream.Write(buffer, 0, ((Int32)packetsize));
+                    stream.Write(buffer, 0, ((int)packetsize));
                 }
 
                 //reset retry counter
@@ -689,7 +660,7 @@ namespace FTDIUSBGecko
                 //write received package to output stream
                 foreach (Stream stream in saveStream)
                 {
-                    stream.Write(buffer, 0, ((Int32)lastchunk));
+                    stream.Write(buffer, 0, ((int)lastchunk));
                 }
                 //reset retry counter
                 retry = 0;
@@ -702,36 +673,36 @@ namespace FTDIUSBGecko
         }
 
 
-        public void Dump(UInt32 startdump, UInt32 enddump, Dump memdump)
+        public void Dump(uint startdump, uint enddump, Dump memdump)
         {
             //Reset connection
             InitGecko();
 
             //How many bytes of data have to be transferred
-            UInt32 memlength = enddump - startdump;
+            uint memlength = enddump - startdump;
 
             //How many chunks do I need to split this data into
             //How big ist the last chunk
-            UInt32 fullchunks = memlength / packetsize;
-            UInt32 lastchunk = memlength % packetsize;
+            uint fullchunks = memlength / packetsize;
+            uint lastchunk = memlength % packetsize;
 
             //How many chunks do I need to transfer
-            UInt32 allchunks = fullchunks;
+            uint allchunks = fullchunks;
             if (lastchunk > 0)
                 allchunks++;
 
-            UInt64 GeckoMemRange = ByteSwap.Swap((UInt64)(((UInt64)startdump << 32) + ((UInt64)enddump)));
+            ulong GeckoMemRange = ByteSwap.Swap((ulong)(((ulong)startdump << 32) + ((ulong)enddump)));
             if (GeckoWrite(BitConverter.GetBytes(cmd_readmem), 1) != FTDICommand.CMD_OK)
                 throw new EUSBGeckoException(EUSBErrorCode.FTDICommandSendError);
 
             //Read reply - expcecting GCACK
-            Byte retry = 0;
+            byte retry = 0;
             while (retry < 10)
             {
-                Byte[] response = new Byte[1];
+                byte[] response = new byte[1];
                 if (GeckoRead(response, 1) != FTDICommand.CMD_OK)
                     throw new EUSBGeckoException(EUSBErrorCode.FTDIReadDataError);
-                Byte reply = response[0];
+                byte reply = response[0];
                 if (reply == GCACK)
                     break;
                 if (retry == 9)
@@ -743,14 +714,14 @@ namespace FTDIUSBGecko
                 throw new EUSBGeckoException(EUSBErrorCode.FTDICommandSendError);
 
             //We start with chunk 0
-            UInt32 chunk = 0;
+            uint chunk = 0;
             retry = 0;
 
             // Reset cancel flag
             bool done = false;
             CancelDump = false;
 
-            Byte[] buffer = new Byte[packetsize]; //read buffer
+            byte[] buffer = new byte[packetsize]; //read buffer
             //GeckoApp.SubArray<Byte> buffer;
             while (chunk < fullchunks && !done)
             {
@@ -785,7 +756,7 @@ namespace FTDIUSBGecko
 
                 Buffer.BlockCopy(buffer, 0, memdump.mem, (int)(chunk * packetsize + (startdump - memdump.StartAddress)), (int)packetsize);
 
-                memdump.ReadCompletedAddress = (UInt32)((chunk + 1) * packetsize + startdump);
+                memdump.ReadCompletedAddress = (uint)((chunk + 1) * packetsize + startdump);
 
                 //reset retry counter
                 retry = 0;
@@ -851,36 +822,36 @@ namespace FTDIUSBGecko
             SendUpdate(allchunks, allchunks, memlength, memlength, true, true);
         }
 
-        public void Upload(UInt32 startupload, UInt32 endupload, Stream sendStream)
+        public void Upload(uint startupload, uint endupload, Stream sendStream)
         {
             //Reset connection
             InitGecko();
 
             //How many bytes of data have to be transferred
-            UInt32 memlength = endupload - startupload;
+            uint memlength = endupload - startupload;
 
             //How many chunks do I need to split this data into
             //How big ist the last chunk
-            UInt32 fullchunks = memlength / uplpacketsize;
-            UInt32 lastchunk = memlength % uplpacketsize;
+            uint fullchunks = memlength / uplpacketsize;
+            uint lastchunk = memlength % uplpacketsize;
 
             //How many chunks do I need to transfer
-            UInt32 allchunks = fullchunks;
+            uint allchunks = fullchunks;
             if (lastchunk > 0)
                 allchunks++;
 
-            UInt64 GeckoMemRange = ByteSwap.Swap((UInt64)(((UInt64)startupload << 32) + ((UInt64)endupload)));
+            ulong GeckoMemRange = ByteSwap.Swap((ulong)(((ulong)startupload << 32) + ((ulong)endupload)));
             if (GeckoWrite(BitConverter.GetBytes(cmd_upload), 1) != FTDICommand.CMD_OK)
                 throw new EUSBGeckoException(EUSBErrorCode.FTDICommandSendError);
 
             //Read reply - expcecting GCACK
-            Byte retry = 0;
+            byte retry = 0;
             while (retry < 10)
             {
-                Byte[] response = new Byte[1];
+                byte[] response = new byte[1];
                 if (GeckoRead(response, 1) != FTDICommand.CMD_OK)
                     throw new EUSBGeckoException(EUSBErrorCode.FTDIReadDataError);
-                Byte reply = response[0];
+                byte reply = response[0];
                 if (reply == GCACK)
                     break;
                 if (retry == 9)
@@ -892,16 +863,16 @@ namespace FTDIUSBGecko
                 throw new EUSBGeckoException(EUSBErrorCode.FTDICommandSendError);
 
             //We start with chunk 0
-            UInt32 chunk = 0;
+            uint chunk = 0;
             retry = 0;
 
-            Byte[] buffer; //read buffer
+            byte[] buffer; //read buffer
             while (chunk < fullchunks)
             {
                 //No output yet availible
                 SendUpdate(chunk, allchunks, chunk * packetsize, memlength, retry == 0, false);
                 //Set buffer
-                buffer = new Byte[uplpacketsize];
+                buffer = new byte[uplpacketsize];
                 //Read buffer from stream
                 sendStream.Read(buffer, 0, (int)uplpacketsize);
                 FTDICommand returnvalue = GeckoWrite(buffer, (int)uplpacketsize);
@@ -939,7 +910,7 @@ namespace FTDIUSBGecko
                 //No output yet availible
                 SendUpdate(chunk, allchunks, chunk * packetsize, memlength, retry == 0, false);
                 //Set buffer
-                buffer = new Byte[lastchunk];
+                buffer = new byte[lastchunk];
                 //Read buffer from stream
                 sendStream.Read(buffer, 0, (int)lastchunk);
                 FTDICommand returnvalue = GeckoRead(buffer, lastchunk);
@@ -987,7 +958,7 @@ namespace FTDIUSBGecko
         }
 
         //Allows sending a basic one byte command to the Wii
-        public FTDICommand RawCommand(Byte id)
+        public FTDICommand RawCommand(byte id)
         {
             return GeckoWrite(BitConverter.GetBytes(id), 1);
         }
@@ -1037,7 +1008,7 @@ namespace FTDIUSBGecko
                 {
                     NotRunning = (status() != WiiStatus.Running);
                 }
-                catch (FTDIUSBGecko.EUSBGeckoException ex)
+                catch (EUSBGeckoException ex)
                 {
                     NotRunning = true;
                     failCounter++;
@@ -1055,13 +1026,13 @@ namespace FTDIUSBGecko
 
         #region poke commands
         //Poke a 32 bit value - note: address and value must be all in endianness of sending platform
-        public void poke(UInt32 address, UInt32 value)
+        public void poke(uint address, uint value)
         {
             //Lower address
             address &= 0xFFFFFFFC;
 
             //value = send [address in big endian] [value in big endian]
-            UInt64 PokeVal = ( ((UInt64)address) << 32) | ((UInt64) value);
+            ulong PokeVal = ( ((ulong)address) << 32) | ((ulong) value);
 
             PokeVal = ByteSwap.Swap(PokeVal);
 
@@ -1075,19 +1046,19 @@ namespace FTDIUSBGecko
         }
 
         //Copy of poke, just poke32 to make clear it is a 32-bit poke
-        public void poke32(UInt32 address, UInt32 value)
+        public void poke32(uint address, uint value)
         {
             poke(address, value);
         }
         
         //Poke a 16 bit value - note: address and value must be all in endianness of sending platform
-        public void poke16(UInt32 address, UInt16 value)
+        public void poke16(uint address, ushort value)
         {
             //Lower address
             address &= 0xFFFFFFFE;
 
             //value = send [address in big endian] [value in big endian]
-            UInt64 PokeVal = (((UInt64)address) << 32) | ((UInt64)value);
+            ulong PokeVal = (((ulong)address) << 32) | ((ulong)value);
 
             PokeVal = ByteSwap.Swap(PokeVal);
 
@@ -1101,10 +1072,10 @@ namespace FTDIUSBGecko
         }
 
         //Poke a 08 bit value - note: address and value must be all in endianness of sending platform
-        public void poke08(UInt32 address, Byte value)
+        public void poke08(uint address, byte value)
         {
             //value = send [address in big endian] [value in big endian]
-            UInt64 PokeVal = (((UInt64)address) << 32) | ((UInt64)value);
+            ulong PokeVal = (((ulong)address) << 32) | ((ulong)value);
 
             PokeVal = ByteSwap.Swap(PokeVal);
 
@@ -1130,10 +1101,10 @@ namespace FTDIUSBGecko
             if (RawCommand(cmd_status) != FTDICommand.CMD_OK)
                 throw new EUSBGeckoException(EUSBErrorCode.FTDICommandSendError);
 
-//			System.Threading.Thread.Sleep(10);
-			
+            //			System.Threading.Thread.Sleep(10);
+
             //Read status
-            Byte[] buffer=new Byte[1];
+            byte[] buffer=new byte[1];
             if (GeckoRead(buffer, 1) != FTDICommand.CMD_OK)
                 throw new EUSBGeckoException(EUSBErrorCode.FTDIReadDataError);
 
@@ -1165,11 +1136,11 @@ namespace FTDIUSBGecko
         //address = Which address should the breakpoint be added on
         //bptype = how many bytes need to be added to the 8 byte aligned address - 5 for read, 6 for write, 7 for rw
         //exact = only break if the exact address is being accessed
-        protected void Breakpoint(UInt32 address, Byte bptype, bool exact)
+        protected void Breakpoint(uint address, byte bptype, bool exact)
         {
             InitGecko();
 
-            UInt32 lowaddr = (address & 0xFFFFFFF8) | bptype; 
+            uint lowaddr = (address & 0xFFFFFFF8) | bptype; 
               //Actual address to put the breakpoint - the identity adder is applied to it
 
             bool useGeckoBP = false;
@@ -1182,7 +1153,7 @@ namespace FTDIUSBGecko
                     throw new EUSBGeckoException(EUSBErrorCode.FTDICommandSendError);
 
                 //Convert lowaddr to BigEndian
-                UInt32 breakpaddr = ByteSwap.Swap(lowaddr);
+                uint breakpaddr = ByteSwap.Swap(lowaddr);
 
                 if (GeckoWrite(BitConverter.GetBytes(breakpaddr),4)!=FTDICommand.CMD_OK)
                     throw new EUSBGeckoException(EUSBErrorCode.FTDICommandSendError);
@@ -1192,7 +1163,7 @@ namespace FTDIUSBGecko
                 if (RawCommand(cmd_nbreakpoint) != FTDICommand.CMD_OK)
                     throw new EUSBGeckoException(EUSBErrorCode.FTDICommandSendError);
 
-                UInt64 breakpaddr = ((UInt64)lowaddr) << 32 | ((UInt64)address);
+                ulong breakpaddr = ((ulong)lowaddr) << 32 | ((ulong)address);
                 breakpaddr = ByteSwap.Swap(breakpaddr);
 
                 if (GeckoWrite(BitConverter.GetBytes(breakpaddr), 8) != FTDICommand.CMD_OK)
@@ -1201,31 +1172,31 @@ namespace FTDIUSBGecko
         }
 
         //Read breakpoint
-        public void BreakpointR(UInt32 address, bool exact)
+        public void BreakpointR(uint address, bool exact)
         {
             Breakpoint(address, BPRead, exact);
         }
-        public void BreakpointR(UInt32 address)
+        public void BreakpointR(uint address)
         {
             Breakpoint(address, BPRead, true);
         }
 
         //Write breakpoint
-        public void BreakpointW(UInt32 address, bool exact)
+        public void BreakpointW(uint address, bool exact)
         {
             Breakpoint(address, BPWrite, exact);
         }
-        public void BreakpointW(UInt32 address)
+        public void BreakpointW(uint address)
         {
             Breakpoint(address, BPWrite, true);
         }
 
         //Read/Write breakpoint
-        public void BreakpointRW(UInt32 address, bool exact)
+        public void BreakpointRW(uint address, bool exact)
         {
             Breakpoint(address, BPReadWrite, exact);
         }
-        public void BreakpointRW(UInt32 address)
+        public void BreakpointRW(uint address)
         {
             Breakpoint(address, BPReadWrite, true);
         }
@@ -1233,12 +1204,12 @@ namespace FTDIUSBGecko
         
         //Execute breakpoints require a different command and different parameters
         //address = address to put the breakpoint on
-        public void BreakpointX(UInt32 address)
+        public void BreakpointX(uint address)
         {
             InitGecko();
 
             //Unlike Data breakpoints Execute breakpoints are exact to 4 bytes
-            UInt32 baddress = ByteSwap.Swap(((UInt32)(address & 0xFFFFFFFC) | BPExecute));
+            uint baddress = ByteSwap.Swap(((uint)(address & 0xFFFFFFFC) | BPExecute));
 
             //Send breakpoint execute command
             if (RawCommand(cmd_breakpointx) != FTDICommand.CMD_OK)
@@ -1253,7 +1224,7 @@ namespace FTDIUSBGecko
         //Function is depricated use status function instead - only for backwards compatibility with Delphi ports!
         public bool BreakpointHit()
         {
-            Byte[] buffer = new Byte[1];
+            byte[] buffer = new byte[1];
             
             if (GeckoRead(buffer, 1) != FTDICommand.CMD_OK)
                 return false;
@@ -1272,7 +1243,7 @@ namespace FTDIUSBGecko
 #endregion
 
         //Is this version code a correct Gecko version?
-        protected bool AllowedVersion(Byte version)
+        protected bool AllowedVersion(byte version)
         {
             for (int i = 0; i < GCAllowedVersions.Length; i++)
                 if (GCAllowedVersions[i] == version)
@@ -1280,16 +1251,16 @@ namespace FTDIUSBGecko
             return false;
         }
 
-        public Byte VersionRequest()
+        public byte VersionRequest()
         {
             InitGecko();
 
             if (RawCommand(cmd_version) != FTDICommand.CMD_OK)
                 throw new EUSBGeckoException(EUSBErrorCode.FTDICommandSendError);
 
-            Byte retries = 0;
-            Byte result = 0;
-            Byte[] buffer = new Byte[1];
+            byte retries = 0;
+            byte result = 0;
+            byte[] buffer = new byte[1];
 
             //try to receive a version 3 times.. if it really does not return anything useful give up!
             do
@@ -1308,7 +1279,7 @@ namespace FTDIUSBGecko
             return result;
         }
 
-        public UInt32 peek(UInt32 address)
+        public uint peek(uint address)
         {
             if (!GeckoApp.ValidMemory.validAddress(address))
             {
@@ -1316,7 +1287,7 @@ namespace FTDIUSBGecko
             }
 
             //address will be alligned to 4
-            UInt32 paddress=address & 0xFFFFFFFC;
+            uint paddress =address & 0xFFFFFFFC;
 
             //Create a memory stream for the actual dump
             MemoryStream stream = new MemoryStream();
@@ -1333,11 +1304,11 @@ namespace FTDIUSBGecko
 
                 //go to beginning
                 stream.Seek(0, SeekOrigin.Begin);
-                Byte[] buffer = new Byte[4];
+                byte[] buffer = new byte[4];
                 stream.Read(buffer, 0, 4);
 
                 //Read buffer
-                UInt32 result = BitConverter.ToUInt32(buffer, 0);
+                uint result = BitConverter.ToUInt32(buffer, 0);
 
                 //Swap to machine endianness and return
                 result = ByteSwap.Swap(result);
@@ -1361,7 +1332,7 @@ namespace FTDIUSBGecko
             bool includeFloatRegisters = (VersionRequest() >= GCNewVer);
 
             //In case we use a new Gecko we receive more data from the console:
-            UInt32 bytesExpected;
+            uint bytesExpected;
             if (includeFloatRegisters)
                 bytesExpected = 0x120;
             else
@@ -1372,12 +1343,12 @@ namespace FTDIUSBGecko
                 throw new EUSBGeckoException(EUSBErrorCode.FTDICommandSendError);
 
             //Read registers
-            Byte[] buffer = new Byte[bytesExpected];
+            byte[] buffer = new byte[bytesExpected];
             if (GeckoRead(buffer, bytesExpected) != FTDICommand.CMD_OK)
                 throw new EUSBGeckoException(EUSBErrorCode.FTDIReadDataError);
 
             //Store registers to output stream!
-            stream.Write(buffer, 0, ((Int32)bytesExpected));
+            stream.Write(buffer, 0, ((int)bytesExpected));
         }
 
         //Send registers
@@ -1386,13 +1357,13 @@ namespace FTDIUSBGecko
             InitGecko();
 
             //FP registers cannot be sent!
-            const Int32 bytesExpected = 0xA0;
+            const int bytesExpected = 0xA0;
 
             if (sendStream.Length != bytesExpected)
                 throw new EUSBGeckoException(EUSBErrorCode.REGStreamSizeInvalid);
 
             //Fill buffer
-            Byte[] buffer = new Byte[bytesExpected];
+            byte[] buffer = new byte[bytesExpected];
             sendStream.Seek(0, SeekOrigin.Begin);
             sendStream.Read(buffer, 0, bytesExpected);
 
@@ -1401,10 +1372,10 @@ namespace FTDIUSBGecko
                 throw new EUSBGeckoException(EUSBErrorCode.FTDICommandSendError);
 
             //Check GCACK reply with 3 retries!
-            Byte retries = 0;
+            byte retries = 0;
             while (retries < 3)
             {
-                Byte[] rpbuffer = new Byte[1];
+                byte[] rpbuffer = new byte[1];
                 if (GeckoRead(rpbuffer, 1) != FTDICommand.CMD_OK)
                     throw new EUSBGeckoException(EUSBErrorCode.FTDIReadDataError);
 
@@ -1446,38 +1417,38 @@ namespace FTDIUSBGecko
         #endregion
 
         #region Cheat related stuff
-        private UInt64 readInt64(Stream inputstream)
+        private ulong readInt64(Stream inputstream)
         {
-            Byte[] buffer = new Byte[8];
+            byte[] buffer = new byte[8];
             inputstream.Read(buffer, 0, 8);
-            UInt64 result = BitConverter.ToUInt64(buffer,0);
+            ulong result = BitConverter.ToUInt64(buffer,0);
             result = ByteSwap.Swap(result);
             return result;
         }
 
-        private void writeInt64(Stream outputstream, UInt64 value)
+        private void writeInt64(Stream outputstream, ulong value)
         {
-            UInt64 bvalue = ByteSwap.Swap(value);
-            Byte[] buffer = BitConverter.GetBytes(bvalue);
+            ulong bvalue = ByteSwap.Swap(value);
+            byte[] buffer = BitConverter.GetBytes(bvalue);
             outputstream.Write(buffer, 0, 8);
         }
 
-        private void insertInto(Stream insertStream, UInt64 value)
+        private void insertInto(Stream insertStream, ulong value)
         {
             MemoryStream tempstream = new MemoryStream();
             writeInt64(tempstream, value);
             insertStream.Seek(0, SeekOrigin.Begin);
-            
-            Byte[] streambuffer=new Byte[insertStream.Length];
-            insertStream.Read(streambuffer,0, (Int32)insertStream.Length);
-            tempstream.Write(streambuffer, 0, (Int32)insertStream.Length);
+
+            byte[] streambuffer=new byte[insertStream.Length];
+            insertStream.Read(streambuffer,0, (int)insertStream.Length);
+            tempstream.Write(streambuffer, 0, (int)insertStream.Length);
 
             insertStream.Seek(0, SeekOrigin.Begin);
             tempstream.Seek(0, SeekOrigin.Begin);
 
-            streambuffer = new Byte[tempstream.Length];
-            tempstream.Read(streambuffer, 0, (Int32)tempstream.Length);
-            insertStream.Write(streambuffer, 0, (Int32)tempstream.Length);
+            streambuffer = new byte[tempstream.Length];
+            tempstream.Read(streambuffer, 0, (int)tempstream.Length);
+            insertStream.Write(streambuffer, 0, (int)tempstream.Length);
 
             tempstream.Close();
         }
@@ -1485,12 +1456,12 @@ namespace FTDIUSBGecko
         public void sendCheats(Stream inputStream)
         {
             MemoryStream cheatStream = new MemoryStream();
-            Byte[] orgData = new Byte[inputStream.Length];
+            byte[] orgData = new byte[inputStream.Length];
             inputStream.Seek(0,SeekOrigin.Begin);
-            inputStream.Read(orgData, 0, (Int32)inputStream.Length);
-            cheatStream.Write(orgData, 0, (Int32)inputStream.Length);
-            
-            UInt32 length = (UInt32)cheatStream.Length;
+            inputStream.Read(orgData, 0, (int)inputStream.Length);
+            cheatStream.Write(orgData, 0, (int)inputStream.Length);
+
+            uint length = (uint)cheatStream.Length;
             //Cheat stream length must be multiple of 8
             if (length % 8 != 0)
             {
@@ -1503,7 +1474,7 @@ namespace FTDIUSBGecko
 
             //Make sure the stream ends with F0/F1
             cheatStream.Seek(-8,SeekOrigin.End);
-            UInt64 data = readInt64(cheatStream);
+            ulong data = readInt64(cheatStream);
             data = data & 0xFE00000000000000;
             if ( (data != 0xF000000000000000) &&
                  (data != 0xFE00000000000000))
@@ -1522,35 +1493,35 @@ namespace FTDIUSBGecko
 
             cheatStream.Seek(0, SeekOrigin.Begin);
 
-            length = (UInt32)cheatStream.Length;
+            length = (uint)cheatStream.Length;
 
             if (GeckoWrite(BitConverter.GetBytes(cmd_sendcheats), 1) != FTDICommand.CMD_OK)
             {
                 cheatStream.Close();
                 throw new EUSBGeckoException(EUSBErrorCode.FTDICommandSendError);
             }
-            
+
             //How many chunks do I need to split this data into
             //How big ist the last chunk
-            UInt32 fullchunks = length / uplpacketsize;
-            UInt32 lastchunk = length % uplpacketsize;
+            uint fullchunks = length / uplpacketsize;
+            uint lastchunk = length % uplpacketsize;
 
             //How many chunks do I need to transfer
-            UInt32 allchunks = fullchunks;
+            uint allchunks = fullchunks;
             if (lastchunk > 0)
                 allchunks++;
 
             //Read reply - expcecting GCACK
-            Byte retry = 0;
+            byte retry = 0;
             while (retry < 10)
             {
-                Byte[] response = new Byte[1];
+                byte[] response = new byte[1];
                 if (GeckoRead(response, 1) != FTDICommand.CMD_OK)
                 {
                     cheatStream.Close();
                     throw new EUSBGeckoException(EUSBErrorCode.FTDIReadDataError);
                 }
-                Byte reply = response[0];
+                byte reply = response[0];
                 if (reply == GCACK)
                     break;
                 if (retry == 9)
@@ -1560,7 +1531,7 @@ namespace FTDIUSBGecko
                 }
             }
 
-            UInt32 blength = ByteSwap.Swap(length);
+            uint blength = ByteSwap.Swap(length);
             if (GeckoWrite(BitConverter.GetBytes(blength), 4) != FTDICommand.CMD_OK)
             {
                 cheatStream.Close();
@@ -1568,16 +1539,16 @@ namespace FTDIUSBGecko
             }
 
             //We start with chunk 0
-            UInt32 chunk = 0;
+            uint chunk = 0;
             retry = 0;
 
-            Byte[] buffer; //read buffer
+            byte[] buffer; //read buffer
             while (chunk < fullchunks)
             {
                 //No output yet availible
                 SendUpdate(chunk, allchunks, chunk * packetsize, length, retry == 0,false);
                 //Set buffer
-                buffer = new Byte[uplpacketsize];
+                buffer = new byte[uplpacketsize];
                 //Read buffer from stream
                 cheatStream.Read(buffer, 0, (int)uplpacketsize);
                 FTDICommand returnvalue = GeckoWrite(buffer, (int)uplpacketsize);
@@ -1604,7 +1575,7 @@ namespace FTDIUSBGecko
                     throw new EUSBGeckoException(EUSBErrorCode.FTDIReadDataError);
                 }
 
-                Byte[] response = new Byte[1];
+                byte[] response = new byte[1];
                 returnvalue = GeckoRead(response, 1);
                 if ((returnvalue == FTDICommand.CMD_ResultError) || (response[0] != GCACK))
                 {
@@ -1642,10 +1613,10 @@ namespace FTDIUSBGecko
                 //No output yet availible
                 SendUpdate(chunk, allchunks, chunk * packetsize, length, retry == 0,false);
                 //Set buffer
-                buffer = new Byte[lastchunk];
+                buffer = new byte[lastchunk];
                 //Read buffer from stream
                 cheatStream.Read(buffer, 0, (int)lastchunk);
-                FTDICommand returnvalue = GeckoWrite(buffer, (Int32)lastchunk);
+                FTDICommand returnvalue = GeckoWrite(buffer, (int)lastchunk);
                 if (returnvalue == FTDICommand.CMD_ResultError)
                 {
                     retry++;
@@ -1694,20 +1665,20 @@ namespace FTDIUSBGecko
             InitGecko();
 
             //Hookpause command or regular hook?
-            Byte command;
+            byte command;
             if (pause)
                 command = cmd_hookpause;
             else
                 command = cmd_hook;
 
             //Perform hook command
-            command += (Byte)hookType;
+            command += (byte)hookType;
             if (RawCommand(command) != FTDICommand.CMD_OK)
                 throw new EUSBGeckoException(EUSBErrorCode.FTDICommandSendError);
 
             //Send language
             if (language != WiiLanguage.NoOverride)
-                command = (Byte)(language - 1);
+                command = (byte)(language - 1);
             else
                 command = 0xCD;
 
@@ -1715,7 +1686,7 @@ namespace FTDIUSBGecko
                 throw new EUSBGeckoException(EUSBErrorCode.FTDICommandSendError);
 
             //Send patches
-            command = (Byte)patches;
+            command = (byte)patches;
             if (RawCommand(command) != FTDICommand.CMD_OK)
                 throw new EUSBGeckoException(EUSBErrorCode.FTDICommandSendError);
         }
@@ -1727,12 +1698,12 @@ namespace FTDIUSBGecko
         #endregion
 
         #region Screenshot processing
-        private static Byte ConvertSafely(double floatValue)
+        private static byte ConvertSafely(double floatValue)
         {
-            return (Byte)Math.Round(Math.Max(0, Math.Min(floatValue, 255)));
+            return (byte)Math.Round(Math.Max(0, Math.Min(floatValue, 255)));
         }
 
-        private static Bitmap ProcessImage(UInt32 width, UInt32 height, Stream analyze)
+        private static Bitmap ProcessImage(uint width, uint height, Stream analyze)
         {
 
             Bitmap BitmapRGB = new Bitmap((int)width, (int)height, PixelFormat.Format24bppRgb);
@@ -1741,11 +1712,11 @@ namespace FTDIUSBGecko
 
             int size = bData.Stride * bData.Height;
 
-            Byte[] data = new Byte[size];
+            byte[] data = new byte[size];
 
             System.Runtime.InteropServices.Marshal.Copy(bData.Scan0, data, 0, size);
 
-            Byte[] bufferBytes= new Byte[width * height * 2];
+            byte[] bufferBytes= new byte[width * height * 2];
 
             int y = 0;
             int u = 0;
@@ -1790,18 +1761,18 @@ namespace FTDIUSBGecko
             analyze = new MemoryStream();
             Dump(0xCC002000, 0xCC002080, analyze);
             analyze.Seek(0, SeekOrigin.Begin);
-            Byte[] viregs = new Byte[128];
+            byte[] viregs = new byte[128];
             analyze.Read(viregs, 0, 128);
             analyze.Close();
 
             //Extract width, height and offset in memory
-            UInt32  swidth = (UInt32)(viregs[0x49] << 3);
-            UInt32 sheight = (UInt32)(((viregs[0] << 5) | (viregs[1] >> 3)) & 0x07FE);
-            UInt32 soffset = (UInt32)((viregs[0x1D] << 16) | (viregs[0x1E] << 8) | viregs[0x1F]);
+            uint swidth = (uint)(viregs[0x49] << 3);
+            uint sheight = (uint)(((viregs[0] << 5) | (viregs[1] >> 3)) & 0x07FE);
+            uint soffset = (uint)((viregs[0x1D] << 16) | (viregs[0x1E] << 8) | viregs[0x1F]);
             if ( (viregs[0x1C] & 0x10) == 0x10)
                 soffset <<= 5;
             soffset += 0x80000000;
-            soffset -= (UInt32)((viregs[0x1C] & 0xF) << 3);
+            soffset -= (uint)((viregs[0x1C] & 0xF) << 3);
 
             //Dump video data
             analyze = new MemoryStream();

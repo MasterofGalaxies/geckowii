@@ -33,10 +33,10 @@ namespace GeckoApp
         public GCTWizard(CodeController codeController)
         {
             InitializeComponent();
-            RAMWriteCollection = new String[] {
+            RAMWriteCollection = new string[] {
                 "Write",
                 "Fill" };
-            IfThenCollection = new String[] {
+            IfThenCollection = new string[] {
                 "equal",
                 "not equal",
                 "greater",
@@ -106,7 +106,7 @@ namespace GeckoApp
 
             if (comboBoxCodeName.SelectedIndex == comboBoxCodeName.Items.Count - 1)
             {
-                textBoxCodeEntries.Text = String.Empty;
+                textBoxCodeEntries.Text = string.Empty;
             }
             else
             {
@@ -120,7 +120,7 @@ namespace GeckoApp
             Hide();
         }
 
-        private bool ValidUserAddress(out UInt32 address)
+        private bool ValidUserAddress(out uint address)
         {
             // Is it a valid 32-bit hexadecimal address?
             if (!GlobalFunctions.tryToHex(textBoxAddress.Text, out address) ||
@@ -151,7 +151,7 @@ namespace GeckoApp
             return true;
         }
 
-        private bool ValidUserValue(out UInt32 value)
+        private bool ValidUserValue(out uint value)
         {
             if (!GlobalFunctions.tryToHex(textBoxValue.Text, out value))
             {
@@ -180,7 +180,7 @@ namespace GeckoApp
             return true;
         }
 
-        private bool ValidUserMask(out UInt32 mask)
+        private bool ValidUserMask(out uint mask)
         {
             if (radioButton32Bit.Checked)
             {
@@ -208,7 +208,7 @@ namespace GeckoApp
             return true;
         }
 
-        private bool ValidUserFill(out UInt32 fill)
+        private bool ValidUserFill(out uint fill)
         {
             if (radioButton32Bit.Checked)
             {
@@ -246,7 +246,7 @@ namespace GeckoApp
         private void AddCodeRAMWrite()
         {
             // Validate user inputs
-            UInt32 address, value, fill;
+            uint address, value, fill;
 
             bool addFill = comboBoxCodeSubType.SelectedIndex == 1;
 
@@ -256,7 +256,7 @@ namespace GeckoApp
 
             if (!ValidUserFill(out fill)) return;
 
-            UInt32 add;
+            uint add;
 
             // Get the size
             if (radioButton8Bit.Checked)
@@ -283,15 +283,15 @@ namespace GeckoApp
         private void AddCodeIfThen()
         {
             // Validate user inputs
-            UInt32 address, value, mask;
+            uint address, value, mask;
 
             if (!ValidUserAddress(out address)) return;
 
             if (!ValidUserValue(out value)) return;
 
             if (!ValidUserMask(out mask)) return;
-            
-            UInt32 add;
+
+            uint add;
 
             // Get the size
             if (radioButton8Bit.Checked)
@@ -336,12 +336,12 @@ namespace GeckoApp
             StandardCodeAddressStuff(address, value, add);
         }
 
-        private void StandardCodeAddressStuff(UInt32 address, UInt32 value, UInt32 add)
+        private void StandardCodeAddressStuff(uint address, uint value, uint add)
         {
             CodeContent nCode = CodeController.CodeTextBoxToCodeContent(textBoxCodeEntries.Text);
             //UInt32 cAddressR = 0x80000000;
-            UInt32 rAddressR;
-            UInt32 offset;
+            uint rAddressR;
+            uint offset;
 
             // base address is masked differently than pointer offset
             if (radioButtonBA.Checked)
@@ -424,7 +424,7 @@ namespace GeckoApp
                 GCTCodeContents.AddCode(comboBoxCodeName.Text);
                 comboBoxCodeName.Items.Remove("New Code");
                 comboBoxCodeName.Items.Add(comboBoxCodeName.Text);
-                String codeText = textBoxCodeEntries.Text;
+                string codeText = textBoxCodeEntries.Text;
                 comboBoxCodeName.SelectedIndex = comboBoxCodeName.Items.Count - 1;
                 comboBoxCodeName.Items.Add("New Code");
                 textBoxCodeEntries.Text = codeText;

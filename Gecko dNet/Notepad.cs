@@ -13,7 +13,7 @@ namespace GeckoApp
 {
     public partial class NoteSheets : Form
     {
-        private String gId;
+        private string gId;
 
         //private List<Sheet> sheets;
         private TabPage PSelected;
@@ -48,7 +48,7 @@ namespace GeckoApp
             SheetSelection.TabPages.Add(newTab);
         }
 
-        private List<Sheet> ImportSheet(String filename)
+        private List<Sheet> ImportSheet(string filename)
         {
             List<Sheet> sheets = new List<Sheet>();
             Xml ImportFile = new Xml(filename);
@@ -57,8 +57,8 @@ namespace GeckoApp
                 ImportFile.RootName = "notesheet";
 
                 string[] sheetsecs = ImportFile.GetSectionNames();
-                String name, content;
-                foreach (String sheetname in sheetsecs)
+                string name, content;
+                foreach (string sheetname in sheetsecs)
                 {
                     name = ImportFile.GetValue(sheetname, "name", "[Noname]");
                     content = ImportFile.GetValue(sheetname, "content", "");
@@ -71,7 +71,7 @@ namespace GeckoApp
             return sheets;
         }        
 
-        public void Show(String gameID)
+        public void Show(string gameID)
         {
             char delim = Path.DirectorySeparatorChar;
             if (gameID.Length >= 3)
@@ -186,7 +186,7 @@ namespace GeckoApp
         private void NoteSheets_FormClosing(object sender, FormClosingEventArgs e)
         {
             char delim = Path.DirectorySeparatorChar;
-            String filename = "notes" + delim + gId + ".xml";
+            string filename = "notes" + delim + gId + ".xml";
             if (File.Exists(filename))
                 File.Delete(filename);
             Xml ExportFile = new Xml(filename);
@@ -194,7 +194,7 @@ namespace GeckoApp
             {
                 ExportFile.RootName = "notesheet";
 
-                String secname;
+                string secname;
                 int pagecount = SheetSelection.TabPages.Count;
                 for (int i = 0; i < pagecount; i++)
                 {

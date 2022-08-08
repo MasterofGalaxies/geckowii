@@ -11,7 +11,7 @@ namespace GeckoApp
 {
     public struct SearchItem
     {
-        public List<UInt32> resultsList;
+        public List<uint> resultsList;
         public Dump searchDump;
         public int index;
     }
@@ -29,7 +29,7 @@ namespace GeckoApp
             backgroundWriting = false;
         }
 
-        public void SaveSearchBackground(int index, List<UInt32> resultsList, Dump searchDump)
+        public void SaveSearchBackground(int index, List<uint> resultsList, Dump searchDump)
         {
             SearchItem foo = new SearchItem();
             // make a copy in case the user starts deleting, sorting, etc the original list
@@ -96,14 +96,14 @@ namespace GeckoApp
             //return retVal;
         }
         
-        public void SaveSearch(int index, List<UInt32> resultsList, Dump searchDump)
+        public void SaveSearch(int index, List<uint> resultsList, Dump searchDump)
         {
             // TODO subdir?  check file exists?
 			char delim = Path.DirectorySeparatorChar;
             SaveSearch("DumpHistory" + delim + "DumpHistory" + index + ".zip", resultsList, searchDump);
         }
 
-        public void SaveSearch(string filepath, List<UInt32> resultsList, Dump searchDump)
+        public void SaveSearch(string filepath, List<uint> resultsList, Dump searchDump)
         {
             ZipOutputStream outstream = new ZipOutputStream(filepath);
             outstream.CompressionLevel = Ionic.Zlib.CompressionLevel.BestSpeed;
@@ -159,13 +159,13 @@ namespace GeckoApp
             return searchDump;
         }
 
-        public List<UInt32> LoadSearchList(int index)
+        public List<uint> LoadSearchList(int index)
         {
 			char delim = Path.DirectorySeparatorChar;
             return LoadSearchList("DumpHistory" + delim + "DumpHistory" + index + ".zip");
         }
 
-        public List<UInt32> LoadSearchList(string filepath)
+        public List<uint> LoadSearchList(string filepath)
         {
             // spin while background writing to prevent us from reading a file that has yet to be written
             while (BackgroundWriting) ;
@@ -179,7 +179,7 @@ namespace GeckoApp
             // Second entry is the list
             instream.GetNextEntry();
 
-            List<UInt32> searchList = (List<UInt32>)formatter.Deserialize(instream);
+            List<uint> searchList = (List<uint>)formatter.Deserialize(instream);
 
             instream.Close();
             instream.Dispose();
@@ -190,7 +190,7 @@ namespace GeckoApp
 
     public class SearchHistoryItem
     {
-        private List<UInt32> resultsList;
+        private List<uint> resultsList;
         private Dump searchDump;
         private bool backgroundWriting;
 
@@ -248,7 +248,7 @@ namespace GeckoApp
             //Logger.WriteLineTimed("Started copying search list");
             startTime = DateTime.Now;
 
-            List<UInt32> copy = new List<uint>(resultsList);
+            List<uint> copy = new List<uint>(resultsList);
 
             endTime = DateTime.Now;
             //Logger.WriteLineTimed("Finished copying search list in " + (new TimeSpan(endTime.Ticks - startTime.Ticks).TotalSeconds));
@@ -274,11 +274,11 @@ namespace GeckoApp
             ZipInputStream instream = new ZipInputStream(filepath);
             BinaryFormatter formatter = new BinaryFormatter();
             instream.GetNextEntry();
-            searchDump = new FTDIUSBGecko.Dump((uint)formatter.Deserialize(instream), (uint)formatter.Deserialize(instream));
+            searchDump = new Dump((uint)formatter.Deserialize(instream), (uint)formatter.Deserialize(instream));
             instream.Read(searchDump.mem, 0, (int)(searchDump.EndAddress - searchDump.StartAddress));
 
             instream.GetNextEntry();
-            resultsList = (System.Collections.Generic.List<UInt32>)formatter.Deserialize(instream);
+            resultsList = (List<uint>)formatter.Deserialize(instream);
 
             instream.Close();
             instream.Dispose();

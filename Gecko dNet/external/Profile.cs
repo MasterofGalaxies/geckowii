@@ -174,92 +174,92 @@ namespace AMS.Profile
 		/// <seealso cref="CloneReadOnly" />
 		public abstract object Clone();
 
-		/// <summary>
-		///   Sets the value for an entry inside a section. </summary>
-		/// <param name="section">
-		///   The name of the section that holds the entry. </param>
-		/// <param name="entry">
-		///   The name of the entry where the value will be set. </param>
-		/// <param name="value">
-		///   The value to set. If it's null, the entry should be removed. </param>
-		/// <exception cref="InvalidOperationException">
-		///   <see cref="Profile.ReadOnly" /> is true or
-		///   <see cref="Profile.Name" /> is null or empty. </exception>
-		/// <exception cref="ArgumentNullException">
-		///   Either section or entry is null. </exception>
-		/// <remarks>
-		///   This method needs to be implemented by derived classes.  Check the 
-		///   documentation to see what other exceptions derived versions may raise.
-		///   See <see cref="IProfile.SetValue">IProfile.SetValue</see> for additional remarks. </remarks>
-		/// <seealso cref="GetValue" />
-		public abstract void SetValue(string section, string entry, object value);
-		
-		/// <summary>
-		///   Retrieves the value of an entry inside a section. </summary>
-		/// <param name="section">
-		///   The name of the section that holds the entry with the value. </param>
-		/// <param name="entry">
-		///   The name of the entry where the value is stored. </param>
-		/// <returns>
-		///   The return value is the entry's value, or null if the entry does not exist. </returns>
-		/// <exception cref="InvalidOperationException">
-		///	  <see cref="Profile.Name" /> is null or empty. </exception>
-		/// <exception cref="ArgumentNullException">
-		///   Either section or entry is null. </exception>
-		/// <remarks>
-		///   This method needs to be implemented by derived classes.  Check the 
-		///   documentation to see what other exceptions derived versions may raise. </remarks>
-		/// <seealso cref="SetValue" />
-		/// <seealso cref="HasEntry" />
-		public abstract object GetValue(string section, string entry);
+        /// <summary>
+        ///   Sets the value for an entry inside a section. </summary>
+        /// <param name="section">
+        ///   The name of the section that holds the entry. </param>
+        /// <param name="entry">
+        ///   The name of the entry where the value will be set. </param>
+        /// <param name="value">
+        ///   The value to set. If it's null, the entry should be removed. </param>
+        /// <exception cref="InvalidOperationException">
+        ///   <see cref="ReadOnly" /> is true or
+        ///   <see cref="Name" /> is null or empty. </exception>
+        /// <exception cref="ArgumentNullException">
+        ///   Either section or entry is null. </exception>
+        /// <remarks>
+        ///   This method needs to be implemented by derived classes.  Check the 
+        ///   documentation to see what other exceptions derived versions may raise.
+        ///   See <see cref="IProfile.SetValue">IProfile.SetValue</see> for additional remarks. </remarks>
+        /// <seealso cref="GetValue" />
+        public abstract void SetValue(string section, string entry, object value);
 
-		/// <summary>
-		///   Retrieves the string value of an entry inside a section, or a default value if the entry does not exist. </summary>
-		/// <param name="section">
-		///   The name of the section that holds the entry with the value. </param>
-		/// <param name="entry">
-		///   The name of the entry where the value is stored. </param>
-		/// <param name="defaultValue">
-		///   The value to return if the entry (or section) does not exist. </param>
-		/// <returns>
-		///   The return value is the entry's value converted to a string, or the given default value if the entry does not exist. </returns>
-		/// <exception cref="InvalidOperationException">
-		///	  <see cref="Profile.Name" /> is null or empty. </exception>
-		/// <exception cref="ArgumentNullException">
-		///   Either section or entry is null. </exception>
-		/// <remarks>
-		///   This method calls <c>GetValue(section, entry)</c> of the derived class, so check its 
-		///   documentation to see what other exceptions may be raised. </remarks>
-		/// <seealso cref="SetValue" />
-		/// <seealso cref="HasEntry" />
-		public virtual string GetValue(string section, string entry, string defaultValue)
+        /// <summary>
+        ///   Retrieves the value of an entry inside a section. </summary>
+        /// <param name="section">
+        ///   The name of the section that holds the entry with the value. </param>
+        /// <param name="entry">
+        ///   The name of the entry where the value is stored. </param>
+        /// <returns>
+        ///   The return value is the entry's value, or null if the entry does not exist. </returns>
+        /// <exception cref="InvalidOperationException">
+        ///	  <see cref="Name" /> is null or empty. </exception>
+        /// <exception cref="ArgumentNullException">
+        ///   Either section or entry is null. </exception>
+        /// <remarks>
+        ///   This method needs to be implemented by derived classes.  Check the 
+        ///   documentation to see what other exceptions derived versions may raise. </remarks>
+        /// <seealso cref="SetValue" />
+        /// <seealso cref="HasEntry" />
+        public abstract object GetValue(string section, string entry);
+
+        /// <summary>
+        ///   Retrieves the string value of an entry inside a section, or a default value if the entry does not exist. </summary>
+        /// <param name="section">
+        ///   The name of the section that holds the entry with the value. </param>
+        /// <param name="entry">
+        ///   The name of the entry where the value is stored. </param>
+        /// <param name="defaultValue">
+        ///   The value to return if the entry (or section) does not exist. </param>
+        /// <returns>
+        ///   The return value is the entry's value converted to a string, or the given default value if the entry does not exist. </returns>
+        /// <exception cref="InvalidOperationException">
+        ///	  <see cref="Name" /> is null or empty. </exception>
+        /// <exception cref="ArgumentNullException">
+        ///   Either section or entry is null. </exception>
+        /// <remarks>
+        ///   This method calls <c>GetValue(section, entry)</c> of the derived class, so check its 
+        ///   documentation to see what other exceptions may be raised. </remarks>
+        /// <seealso cref="SetValue" />
+        /// <seealso cref="HasEntry" />
+        public virtual string GetValue(string section, string entry, string defaultValue)
 		{
 			object value = GetValue(section, entry);
 			return (value == null ? defaultValue : value.ToString());
 		}
 
-		/// <summary>
-		///   Retrieves the integer value of an entry inside a section, or a default value if the entry does not exist. </summary>
-		/// <param name="section">
-		///   The name of the section that holds the entry with the value. </param>
-		/// <param name="entry">
-		///   The name of the entry where the value is stored. </param>
-		/// <param name="defaultValue">
-		///   The value to return if the entry (or section) does not exist. </param>
-		/// <returns>
-		///   The return value is the entry's value converted to an integer.  If the value
-		///   cannot be converted, the return value is 0.  If the entry does not exist, the
-		///   given default value is returned. </returns>
-		/// <exception cref="InvalidOperationException">
-		///	  <see cref="Profile.Name" /> is null or empty. </exception>
-		/// <exception cref="ArgumentNullException">
-		///   Either section or entry is null. </exception>
-		/// <remarks>
-		///   This method calls <c>GetValue(section, entry)</c> of the derived class, so check its 
-		///   documentation to see what other exceptions may be raised. </remarks>
-		/// <seealso cref="SetValue" />
-		/// <seealso cref="HasEntry" />
-		public virtual int GetValue(string section, string entry, int defaultValue)
+        /// <summary>
+        ///   Retrieves the integer value of an entry inside a section, or a default value if the entry does not exist. </summary>
+        /// <param name="section">
+        ///   The name of the section that holds the entry with the value. </param>
+        /// <param name="entry">
+        ///   The name of the entry where the value is stored. </param>
+        /// <param name="defaultValue">
+        ///   The value to return if the entry (or section) does not exist. </param>
+        /// <returns>
+        ///   The return value is the entry's value converted to an integer.  If the value
+        ///   cannot be converted, the return value is 0.  If the entry does not exist, the
+        ///   given default value is returned. </returns>
+        /// <exception cref="InvalidOperationException">
+        ///	  <see cref="Name" /> is null or empty. </exception>
+        /// <exception cref="ArgumentNullException">
+        ///   Either section or entry is null. </exception>
+        /// <remarks>
+        ///   This method calls <c>GetValue(section, entry)</c> of the derived class, so check its 
+        ///   documentation to see what other exceptions may be raised. </remarks>
+        /// <seealso cref="SetValue" />
+        /// <seealso cref="HasEntry" />
+        public virtual int GetValue(string section, string entry, int defaultValue)
 		{
 			object value = GetValue(section, entry);
 			if (value == null)
@@ -275,28 +275,28 @@ namespace AMS.Profile
 			}
 		}
 
-		/// <summary>
-		///   Retrieves the double value of an entry inside a section, or a default value if the entry does not exist. </summary>
-		/// <param name="section">
-		///   The name of the section that holds the entry with the value. </param>
-		/// <param name="entry">
-		///   The name of the entry where the value is stored. </param>
-		/// <param name="defaultValue">
-		///   The value to return if the entry (or section) does not exist. </param>
-		/// <returns>
-		///   The return value is the entry's value converted to a double.  If the value
-		///   cannot be converted, the return value is 0.  If the entry does not exist, the
-		///   given default value is returned. </returns>
-		/// <exception cref="InvalidOperationException">
-		///	  <see cref="Profile.Name" /> is null or empty. </exception>
-		/// <exception cref="ArgumentNullException">
-		///   Either section or entry is null. </exception>
-		/// <remarks>
-		///   This method calls <c>GetValue(section, entry)</c> of the derived class, so check its 
-		///   documentation to see what other exceptions may be raised. </remarks>
-		/// <seealso cref="SetValue" />
-		/// <seealso cref="HasEntry" />
-		public virtual double GetValue(string section, string entry, double defaultValue)
+        /// <summary>
+        ///   Retrieves the double value of an entry inside a section, or a default value if the entry does not exist. </summary>
+        /// <param name="section">
+        ///   The name of the section that holds the entry with the value. </param>
+        /// <param name="entry">
+        ///   The name of the entry where the value is stored. </param>
+        /// <param name="defaultValue">
+        ///   The value to return if the entry (or section) does not exist. </param>
+        /// <returns>
+        ///   The return value is the entry's value converted to a double.  If the value
+        ///   cannot be converted, the return value is 0.  If the entry does not exist, the
+        ///   given default value is returned. </returns>
+        /// <exception cref="InvalidOperationException">
+        ///	  <see cref="Name" /> is null or empty. </exception>
+        /// <exception cref="ArgumentNullException">
+        ///   Either section or entry is null. </exception>
+        /// <remarks>
+        ///   This method calls <c>GetValue(section, entry)</c> of the derived class, so check its 
+        ///   documentation to see what other exceptions may be raised. </remarks>
+        /// <seealso cref="SetValue" />
+        /// <seealso cref="HasEntry" />
+        public virtual double GetValue(string section, string entry, double defaultValue)
 		{
 			object value = GetValue(section, entry);
 			if (value == null)
@@ -312,30 +312,30 @@ namespace AMS.Profile
 			}
 		}
 
-		/// <summary>
-		///   Retrieves the bool value of an entry inside a section, or a default value if the entry does not exist. </summary>
-		/// <param name="section">
-		///   The name of the section that holds the entry with the value. </param>
-		/// <param name="entry">
-		///   The name of the entry where the value is stored. </param>
-		/// <param name="defaultValue">
-		///   The value to return if the entry (or section) does not exist. </param>
-		/// <returns>
-		///   The return value is the entry's value converted to a bool.  If the value
-		///   cannot be converted, the return value is <c>false</c>.  If the entry does not exist, the
-		///   given default value is returned. </returns>
-		/// <exception cref="InvalidOperationException">
-		///	  <see cref="Profile.Name" /> is null or empty. </exception>
-		/// <exception cref="ArgumentNullException">
-		///   Either section or entry is null. </exception>
-		/// <remarks>
-		///   Note: Boolean values are stored as "True" or "False". 
-		///   <para>
-		///   This method calls <c>GetValue(section, entry)</c> of the derived class, so check its 
-		///   documentation to see what other exceptions may be raised. </para></remarks>
-		/// <seealso cref="SetValue" />
-		/// <seealso cref="HasEntry" />
-		public virtual bool GetValue(string section, string entry, bool defaultValue)
+        /// <summary>
+        ///   Retrieves the bool value of an entry inside a section, or a default value if the entry does not exist. </summary>
+        /// <param name="section">
+        ///   The name of the section that holds the entry with the value. </param>
+        /// <param name="entry">
+        ///   The name of the entry where the value is stored. </param>
+        /// <param name="defaultValue">
+        ///   The value to return if the entry (or section) does not exist. </param>
+        /// <returns>
+        ///   The return value is the entry's value converted to a bool.  If the value
+        ///   cannot be converted, the return value is <c>false</c>.  If the entry does not exist, the
+        ///   given default value is returned. </returns>
+        /// <exception cref="InvalidOperationException">
+        ///	  <see cref="Name" /> is null or empty. </exception>
+        /// <exception cref="ArgumentNullException">
+        ///   Either section or entry is null. </exception>
+        /// <remarks>
+        ///   Note: Boolean values are stored as "True" or "False". 
+        ///   <para>
+        ///   This method calls <c>GetValue(section, entry)</c> of the derived class, so check its 
+        ///   documentation to see what other exceptions may be raised. </para></remarks>
+        /// <seealso cref="SetValue" />
+        /// <seealso cref="HasEntry" />
+        public virtual bool GetValue(string section, string entry, bool defaultValue)
 		{
 			object value = GetValue(section, entry);
 			if (value == null)
@@ -396,37 +396,37 @@ namespace AMS.Profile
 			return Array.IndexOf(sections, section) >= 0;
 		}
 
-		/// <summary>
-		///   Removes an entry from a section. </summary>
-		/// <param name="section">
-		///   The name of the section that holds the entry. </param>
-		/// <param name="entry">
-		///   The name of the entry to remove. </param>
-		/// <exception cref="InvalidOperationException">
-		///   <see cref="Profile.ReadOnly" /> is true. </exception>
-		/// <exception cref="ArgumentNullException">
-		///   Either section or entry is null. </exception>
-		/// <remarks>
-		///   This method needs to be implemented by derived classes.  Check the 
-		///   documentation to see what other exceptions derived versions may raise.
-		///   See <see cref="IProfile.RemoveEntry">IProfile.RemoveEntry</see> for additional remarks. </remarks>
-		/// <seealso cref="RemoveSection" />
-		public abstract void RemoveEntry(string section, string entry);
+        /// <summary>
+        ///   Removes an entry from a section. </summary>
+        /// <param name="section">
+        ///   The name of the section that holds the entry. </param>
+        /// <param name="entry">
+        ///   The name of the entry to remove. </param>
+        /// <exception cref="InvalidOperationException">
+        ///   <see cref="ReadOnly" /> is true. </exception>
+        /// <exception cref="ArgumentNullException">
+        ///   Either section or entry is null. </exception>
+        /// <remarks>
+        ///   This method needs to be implemented by derived classes.  Check the 
+        ///   documentation to see what other exceptions derived versions may raise.
+        ///   See <see cref="IProfile.RemoveEntry">IProfile.RemoveEntry</see> for additional remarks. </remarks>
+        /// <seealso cref="RemoveSection" />
+        public abstract void RemoveEntry(string section, string entry);
 
-		/// <summary>
-		///   Removes a section. </summary>
-		/// <param name="section">
-		///   The name of the section to remove. </param>
-		/// <exception cref="InvalidOperationException">
-		///   <see cref="Profile.ReadOnly" /> is true. </exception>
-		/// <exception cref="ArgumentNullException">
-		///   section is null. </exception>
-		/// <remarks>
-		///   This method needs to be implemented by derived classes.  Check the 
-		///   documentation to see what other exceptions derived versions may raise.
-		///   See <see cref="IProfile.RemoveSection">IProfile.RemoveSection</see> for additional remarks. </remarks>
-		/// <seealso cref="RemoveEntry" />
-		public abstract void RemoveSection(string section);
+        /// <summary>
+        ///   Removes a section. </summary>
+        /// <param name="section">
+        ///   The name of the section to remove. </param>
+        /// <exception cref="InvalidOperationException">
+        ///   <see cref="ReadOnly" /> is true. </exception>
+        /// <exception cref="ArgumentNullException">
+        ///   section is null. </exception>
+        /// <remarks>
+        ///   This method needs to be implemented by derived classes.  Check the 
+        ///   documentation to see what other exceptions derived versions may raise.
+        ///   See <see cref="IProfile.RemoveSection">IProfile.RemoveSection</see> for additional remarks. </remarks>
+        /// <seealso cref="RemoveEntry" />
+        public abstract void RemoveSection(string section);
 		
 		/// <summary>
 		///   Retrieves the names of all the entries inside a section. </summary>
@@ -471,25 +471,25 @@ namespace AMS.Profile
 			return profile;
 		}
 
-		/// <summary>
-		///   Retrieves a DataSet object containing every section, entry, and value in the profile. </summary>
-		/// <returns>
-		///   If the profile exists, the return value is a DataSet object representing the profile; otherwise it's null. </returns>
-		/// <exception cref="InvalidOperationException">
-		///	  <see cref="Profile.Name" /> is null or empty. </exception>
-		/// <remarks>
-		///   The returned DataSet will be named using the <see cref="Name" /> property.  
-		///   It will contain one table for each section, and each entry will be represented by a column inside the table.
-		///   Each table will contain only one row where the values will stored corresponding to each column (entry). 
-		///   <para>
-		///   This method serves as a convenient way to extract the profile's data to this generic medium known as the DataSet.  
-		///   This allows it to be moved to many different places, including a different type of profile object 
-		///   (eg., INI to XML conversion). </para>
-		///   <para>
-		///   This method calls GetSectionNames, GetEntryNames, and GetValue of the derived class, so check the 
-		///   documentation to see what other exceptions may be raised. </para></remarks>
-		/// <seealso cref="SetDataSet" />
-		public virtual DataSet GetDataSet()
+        /// <summary>
+        ///   Retrieves a DataSet object containing every section, entry, and value in the profile. </summary>
+        /// <returns>
+        ///   If the profile exists, the return value is a DataSet object representing the profile; otherwise it's null. </returns>
+        /// <exception cref="InvalidOperationException">
+        ///	  <see cref="Name" /> is null or empty. </exception>
+        /// <remarks>
+        ///   The returned DataSet will be named using the <see cref="Name" /> property.  
+        ///   It will contain one table for each section, and each entry will be represented by a column inside the table.
+        ///   Each table will contain only one row where the values will stored corresponding to each column (entry). 
+        ///   <para>
+        ///   This method serves as a convenient way to extract the profile's data to this generic medium known as the DataSet.  
+        ///   This allows it to be moved to many different places, including a different type of profile object 
+        ///   (eg., INI to XML conversion). </para>
+        ///   <para>
+        ///   This method calls GetSectionNames, GetEntryNames, and GetValue of the derived class, so check the 
+        ///   documentation to see what other exceptions may be raised. </para></remarks>
+        /// <seealso cref="SetDataSet" />
+        public virtual DataSet GetDataSet()
 		{
 			VerifyName();
 			
@@ -525,29 +525,29 @@ namespace AMS.Profile
 			
 			return ds;
 		}
-		
-		/// <summary>
-		///   Writes the data of every table from a DataSet into this profile. </summary>
-		/// <param name="ds">
-		///   The DataSet object containing the data to be set. </param>
-		/// <exception cref="InvalidOperationException">
-		///   <see cref="Profile.ReadOnly" /> is true or
-		///   <see cref="Profile.Name" /> is null or empty. </exception>
-		/// <exception cref="ArgumentNullException">
-		///   ds is null. </exception>
-		/// <remarks>
-		///   Each table in the DataSet represents a section of the profile.  
-		///   Each column of each table represents an entry.  And for each column, the corresponding value
-		///   of the first row is the value to be passed to <see cref="SetValue" />.  
-		///   Note that only the first row is imported; additional rows are ignored.
-		///   <para>
-		///   This method serves as a convenient way to take any data inside a generic DataSet and 
-		///   write it to any of the available profiles. </para>
-		///   <para>
-		///   This method calls SetValue of the derived class, so check its 
-		///   documentation to see what other exceptions may be raised. </para></remarks>
-		/// <seealso cref="GetDataSet" />
-		public virtual void SetDataSet(DataSet ds)
+
+        /// <summary>
+        ///   Writes the data of every table from a DataSet into this profile. </summary>
+        /// <param name="ds">
+        ///   The DataSet object containing the data to be set. </param>
+        /// <exception cref="InvalidOperationException">
+        ///   <see cref="ReadOnly" /> is true or
+        ///   <see cref="Name" /> is null or empty. </exception>
+        /// <exception cref="ArgumentNullException">
+        ///   ds is null. </exception>
+        /// <remarks>
+        ///   Each table in the DataSet represents a section of the profile.  
+        ///   Each column of each table represents an entry.  And for each column, the corresponding value
+        ///   of the first row is the value to be passed to <see cref="SetValue" />.  
+        ///   Note that only the first row is imported; additional rows are ignored.
+        ///   <para>
+        ///   This method serves as a convenient way to take any data inside a generic DataSet and 
+        ///   write it to any of the available profiles. </para>
+        ///   <para>
+        ///   This method calls SetValue of the derived class, so check its 
+        ///   documentation to see what other exceptions may be raised. </para></remarks>
+        /// <seealso cref="GetDataSet" />
+        public virtual void SetDataSet(DataSet ds)
 		{
 			if (ds == null)
 				throw new ArgumentNullException("ds");
@@ -588,7 +588,7 @@ namespace AMS.Profile
 			{
 				try
 				{
-					string file = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
+					string file = AppDomain.CurrentDomain.FriendlyName;
 					return file.Substring(0, file.LastIndexOf('.'));
 				}
 				catch

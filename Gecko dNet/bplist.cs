@@ -26,8 +26,8 @@ namespace GeckoApp
 
 
         private Label[] PLongRegTextBox;
-        private static String[] PLongRegNames =
-            new String[72] {
+        private static string[] PLongRegNames =
+            new string[72] {
                 "  CR"," XER"," CTR","DSIS"," DAR","SRR0","SRR1",
                 "  r0","  r1","  r2","  r3","  r4","  r5","  r6","  r7",
                 "  r8","  r9"," r10"," r11"," r12"," r13"," r14"," r15",
@@ -41,15 +41,15 @@ namespace GeckoApp
             };
         private int[] PLongRegIDs;
         private Label[] PShortRegTextBox;
-        private String[] PShortRegNames;
+        private string[] PShortRegNames;
 
         public Label[] longRegTextBox { get { return PLongRegTextBox; } }
-        public static String[] longRegNames { get { return PLongRegNames; } }
+        public static string[] longRegNames { get { return PLongRegNames; } }
         public int[] longRegIDs { get { return PLongRegIDs; } }
         public Label[] shortRegTextBox { get { return PShortRegTextBox; } }
-        public String[] shortRegNames { get { return PShortRegNames; } }
+        public string[] shortRegNames { get { return PShortRegNames; } }
 
-        public static int regTextToID(String reg)
+        public static int regTextToID(string reg)
         {
             for (int i = 0; i < 72; i++)
             {
@@ -94,7 +94,7 @@ namespace GeckoApp
                 mLR
             };
 
-            PShortRegNames = new String[40]  {
+            PShortRegNames = new string[40]  {
                 "CR","XER","CTR","DSIS","DAR","SRR0","SRR1",
                 "r0","r1","r2","r3","r4","r5","r6","r7",
                 "r8","r9","r10","r11","r12","r13","r14","r15",

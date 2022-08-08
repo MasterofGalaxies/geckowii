@@ -15,13 +15,13 @@ namespace GeckoApp
             InitializeComponent();
         }
 
-        public UInt32[] WAddress;
-        public String WName;
+        public uint[] WAddress;
+        public string WName;
         public WatchDataSize WDataSize;
 
         private void btn_OK_Click(object sender, EventArgs e)
         {
-            UInt32[] address;
+            uint[] address;
             if (inputName.Text == "")
             {
                 MessageBox.Show("Please type in a code name!");

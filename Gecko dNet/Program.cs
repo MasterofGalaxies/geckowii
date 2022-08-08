@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using System.IO;
+using GeckoApp;
 
-namespace GeckoApp
+namespace GeckoWii
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
-        /// Der Haupteinstiegspunkt für die Anwendung.
+        ///  The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
@@ -18,5 +15,4 @@ namespace GeckoApp
             Application.Run(new MainForm());
         }
     }
-
 }

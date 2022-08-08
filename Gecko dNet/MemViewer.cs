@@ -26,8 +26,8 @@ namespace GeckoApp
         private TextBox pokeAddress;
         private TextBox pokeValue;
         private Label fpValue;
-        private UInt32 cAddress;
-        private UInt32 selAddress;
+        private uint cAddress;
+        private uint selAddress;
         private MemoryViewMode PViewMode;
         private bool searching;
 
@@ -36,7 +36,7 @@ namespace GeckoApp
         private int oldCol = 1;
         private int oldRow = 0;
 
-        public UInt32 address
+        public uint address
         {
             get
             {
@@ -50,7 +50,7 @@ namespace GeckoApp
             }
         }
 
-        public UInt32 selectedAddress
+        public uint selectedAddress
         {
             // TODO: handle changing poke box 
             get
@@ -78,7 +78,7 @@ namespace GeckoApp
             set { searching = value; }
         }
 
-        public MemoryViewer(USBGecko UGecko, UInt32 initAddress,DataGridView UGView,
+        public MemoryViewer(USBGecko UGecko, uint initAddress,DataGridView UGView,
             TextBox UPokeAddress,TextBox UPokeValue,Label UFPValue, ExceptionHandler UExpHandler)
         {
             gecko = UGecko;
@@ -93,11 +93,11 @@ namespace GeckoApp
             gView.SelectionChanged += CellSelectionChange;
         }
 
-        private UInt32 ReadStream(Stream input)
+        private uint ReadStream(Stream input)
         {
-            Byte[] buffer = new Byte[4];
+            byte[] buffer = new byte[4];
             input.Read(buffer, 0, 4);
-            return (UInt32)ByteSwap.Swap(BitConverter.ToUInt32(buffer, 0));
+            return (uint)ByteSwap.Swap(BitConverter.ToUInt32(buffer, 0));
         }
 
         public void Update()
@@ -121,9 +121,9 @@ namespace GeckoApp
                 oldColumnIndex = 1;
                 oldRowIndex = 1;
             }
-            
-            UInt32 sAddress = cAddress & 0xFFFFFFF0;
-            UInt32 offset = cAddress - sAddress;
+
+            uint sAddress = cAddress & 0xFFFFFFF0;
+            uint offset = cAddress - sAddress;
             try
             {
                 gecko.Dump(sAddress, sAddress + 0x100, miniDump);
@@ -138,10 +138,10 @@ namespace GeckoApp
                 }
                 
                 miniDump.Seek(0, SeekOrigin.Begin);
-                UInt32 value, bValue;
-                Byte[] buffer = new Byte[4];
-                UInt16 hwInput;
-                UInt32 pValue = 0;
+                uint value, bValue;
+                byte[] buffer = new byte[4];
+                ushort hwInput;
+                uint pValue = 0;
                 for (int i = 0; i < 16; i++)
                 {
                     gView.Rows[i].Cells[0].Value = GlobalFunctions.toHex(sAddress + i * 16);
@@ -183,8 +183,8 @@ namespace GeckoApp
                             else
                             {
                                 // If it's a float, and it's not too big or small, cast it as a Single
-                                Single singleCast = GlobalFunctions.UIntToSingle(value);
-                                if (!Single.IsNaN(singleCast) && Math.Abs(singleCast) > 1e-7 && Math.Abs(singleCast) < 1e10)
+                                float singleCast = GlobalFunctions.UIntToSingle(value);
+                                if (!float.IsNaN(singleCast) && Math.Abs(singleCast) > 1e-7 && Math.Abs(singleCast) < 1e10)
                                 {
                                     cell.Value = PrettyFloat(GlobalFunctions.UIntToSingle(value));
                                 }
@@ -234,9 +234,9 @@ namespace GeckoApp
             }
         }
 
-        private String PrettyFloat(Single val)
+        private string PrettyFloat(float val)
         {
-            String floatString = val.ToString("G6");
+            string floatString = val.ToString("G6");
             if (floatString.Length > 8)
             {
                 return val.ToString("G2");
@@ -247,12 +247,12 @@ namespace GeckoApp
             }
         }
 
-        private static String DecodeUnicode(Byte[] buffer)
+        private static string DecodeUnicode(byte[] buffer)
         {
-            String cellV = "";
+            string cellV = "";
             for (int k = 0; k < 2; k++)
             {
-                UInt16 hwInput = (UInt16)(buffer[k * 2] << 8 + buffer[k * 2 + 1]);
+                ushort hwInput = (ushort)(buffer[k * 2] << 8 + buffer[k * 2 + 1]);
                 if (hwInput > 0x20 && hwInput != 0x7F)
                     cellV += "   " + (char)hwInput;
                 else
@@ -261,7 +261,7 @@ namespace GeckoApp
             return cellV;
         }
 
-        private static bool IsASCII(Byte[] buffer)
+        private static bool IsASCII(byte[] buffer)
         {
             for (int k = 0; k < 4; k++)
             {
@@ -270,12 +270,12 @@ namespace GeckoApp
             return true;
         }
 
-        private static String DecodeASCII(Byte[] buffer)
+        private static string DecodeASCII(byte[] buffer)
         {
-            String cellV = "";
+            string cellV = "";
             for (int k = 0; k < 4; k++)
             {
-                Byte bInput = buffer[k];
+                byte bInput = buffer[k];
                 if (bInput > 0x20 && bInput < 0x7F)
                     cellV += " " + (char)bInput;
                 else
@@ -284,12 +284,12 @@ namespace GeckoApp
             return cellV;
         }
 
-        private static String DecodeANSI(Byte[] buffer)
+        private static string DecodeANSI(byte[] buffer)
         {
-            String cellV = "";
+            string cellV = "";
             for (int k = 0; k < 4; k++)
             {
-                Byte bInput = buffer[k];
+                byte bInput = buffer[k];
                 if (bInput > 0x20 && bInput != 0x7F)
                     cellV += " " + (char)bInput;
                 else
@@ -306,7 +306,7 @@ namespace GeckoApp
 
         private void CellSelectionChange(object sender, EventArgs e)
         {
-            UInt32 sAddress = cAddress & 0xFFFFFFF0;
+            uint sAddress = cAddress & 0xFFFFFFF0;
             if (gView.SelectedCells.Count > 0)
             {
                 int col = gView.SelectedCells[0].ColumnIndex;
@@ -319,7 +319,7 @@ namespace GeckoApp
                 {
                     oldCol = col;
                     oldRow = row;
-                    UInt32 addr = (UInt32)(sAddress + row * 16 + (col - 1) * 4);
+                    uint addr = (uint)(sAddress + row * 16 + (col - 1) * 4);
 
                     // Nothing to update if the address didn't change
                     if (selAddress == addr) return;
@@ -328,7 +328,7 @@ namespace GeckoApp
                     pokeAddress.Text = GlobalFunctions.toHex(addr);
                     try
                     {
-                        UInt32 locValue = gecko.peek(addr);
+                        uint locValue = gecko.peek(addr);
                         pokeValue.Text = GlobalFunctions.toHex(locValue);
                         fpValue.Text = GlobalFunctions.UIntToSingle(locValue).ToString("G6");
                     }
@@ -344,10 +344,10 @@ namespace GeckoApp
         //public void SearchString(String sString, bool caseSensitive, bool unicode)
         {
             byte[] stringBytes = searchBytes;
-            
-            UInt32 startAddr = selAddress + 4;
 
-            UInt32 endAddress = 0;
+            uint startAddr = selAddress + 4;
+
+            uint endAddress = 0;
 
             int dumpLength = (unicode ? 2:1);
             
@@ -371,16 +371,16 @@ namespace GeckoApp
             bool valueFound = false;
             int inpos = 0;
 
-            UInt32 beginAddress = startAddr;
+            uint beginAddress = startAddr;
 
             MemoryStream ms = new MemoryStream();
             long streamPos = 0;
-            UInt32 cVal;
+            uint cVal;
             char cChar;
 
-            UInt32 SearchBufferSize = 0xF800 * 8;   // F800 is the packet size in USBGecko.cs
+            uint SearchBufferSize = 0xF800 * 8;   // F800 is the packet size in USBGecko.cs
 
-            UInt32 dumpHigh = Math.Min(startAddr + SearchBufferSize, endAddress);     
+            uint dumpHigh = Math.Min(startAddr + SearchBufferSize, endAddress);     
 
             try
             {
@@ -409,7 +409,7 @@ namespace GeckoApp
 
                 if (valueFound)
                 {
-                    UInt32 address = (UInt32)(beginAddress + index);
+                    uint address = (uint)(beginAddress + index);
                     cAddress = address;
                 }
                 else

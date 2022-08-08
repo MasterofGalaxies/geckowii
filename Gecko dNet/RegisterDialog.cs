@@ -10,7 +10,7 @@ namespace GeckoApp
 {
     public partial class RegisterDialog : Form
     {
-        private UInt32 setValue;
+        private uint setValue;
 
         public RegisterDialog()
         {
@@ -22,7 +22,7 @@ namespace GeckoApp
 
         }
 
-        public bool SetRegister(String name, ref UInt32 value)
+        public bool SetRegister(string name, ref uint value)
         {
             InstLab.Text = "You are about to change the value stored in the register " + name +
                            ". Please type in the new value and click OK to set it or Cancel to abort.";
@@ -41,7 +41,7 @@ namespace GeckoApp
 
         private void CheckInput_Click(object sender, EventArgs e)
         {
-            UInt32 tryHex;
+            uint tryHex;
             if (GlobalFunctions.tryToHex(RValue.Text, out tryHex))
             {
                 setValue = tryHex;

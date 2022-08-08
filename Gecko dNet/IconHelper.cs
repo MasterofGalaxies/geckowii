@@ -52,7 +52,7 @@ namespace IconHelper
 		/// <param name="size">Large or small</param>
 		/// <param name="linkOverlay">Whether to include the link icon</param>
 		/// <returns>System.Drawing.Icon</returns>
-		public static System.Drawing.Icon GetFileIcon(string name, IconSize size, bool linkOverlay)
+		public static Icon GetFileIcon(string name, IconSize size, bool linkOverlay)
 		{
 			Shell32.SHFILEINFO shfi = new Shell32.SHFILEINFO();
 			uint flags = Shell32.SHGFI_ICON | Shell32.SHGFI_USEFILEATTRIBUTES;
@@ -75,8 +75,8 @@ namespace IconHelper
 				(uint) System.Runtime.InteropServices.Marshal.SizeOf(shfi), 
 				flags );
 
-			// Copy (clone) the returned icon to a new object, thus allowing us to clean-up properly
-			System.Drawing.Icon icon = (System.Drawing.Icon)System.Drawing.Icon.FromHandle(shfi.hIcon).Clone();
+            // Copy (clone) the returned icon to a new object, thus allowing us to clean-up properly
+            Icon icon = (Icon)System.Drawing.Icon.FromHandle(shfi.hIcon).Clone();
 			User32.DestroyIcon( shfi.hIcon );		// Cleanup
 			return icon;
 		}
@@ -87,7 +87,7 @@ namespace IconHelper
 		/// <param name="size">Specify large or small icons.</param>
 		/// <param name="folderType">Specify open or closed FolderType.</param>
 		/// <returns>System.Drawing.Icon</returns>
-		public static System.Drawing.Icon GetFolderIcon( IconSize size, FolderType folderType )
+		public static Icon GetFolderIcon( IconSize size, FolderType folderType )
 		{
 			// Need to add size check, although errors generated at present!
 			uint flags = Shell32.SHGFI_ICON | Shell32.SHGFI_USEFILEATTRIBUTES;
@@ -114,10 +114,10 @@ namespace IconHelper
 				(uint) System.Runtime.InteropServices.Marshal.SizeOf(shfi), 
 				flags );
 
-			System.Drawing.Icon.FromHandle(shfi.hIcon);	// Load the icon from an HICON handle
+			System.Drawing.Icon.FromHandle(shfi.hIcon); // Load the icon from an HICON handle
 
-			// Now clone the icon, so that it can be successfully stored in an ImageList
-			System.Drawing.Icon icon = (System.Drawing.Icon)System.Drawing.Icon.FromHandle(shfi.hIcon).Clone();
+            // Now clone the icon, so that it can be successfully stored in an ImageList
+            Icon icon = (Icon)System.Drawing.Icon.FromHandle(shfi.hIcon).Clone();
 
 			User32.DestroyIcon( shfi.hIcon );		// Cleanup
 			return icon;

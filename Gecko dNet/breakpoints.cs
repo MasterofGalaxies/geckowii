@@ -23,9 +23,9 @@ namespace GeckoApp
     public class BreakpointCondition
     {
         private int PRegister;
-        private UInt32 PValue;
+        private uint PValue;
         private BreakpointComparison PCondition;
-        public UInt32 GroupNumber;
+        public uint GroupNumber;
 
         public int register
         {
@@ -41,7 +41,7 @@ namespace GeckoApp
                     PRegister = 0;
             }
         }
-        public UInt32 value
+        public uint value
         {
             get
             {
@@ -64,7 +64,7 @@ namespace GeckoApp
             }
         }
 
-        public BreakpointCondition(int register, UInt32 value,
+        public BreakpointCondition(int register, uint value,
             BreakpointComparison condition)
         {
             this.register = register;
@@ -73,8 +73,8 @@ namespace GeckoApp
             GroupNumber = 1;
         }
 
-        public BreakpointCondition(int register, UInt32 value,
-            BreakpointComparison condition, UInt32 groupNumber)
+        public BreakpointCondition(int register, uint value,
+            BreakpointComparison condition, uint groupNumber)
         {
             this.register = register;
             PValue = value;
@@ -82,14 +82,14 @@ namespace GeckoApp
             GroupNumber = groupNumber;
         }
 
-        public bool Compare(Stream regStream, BreakpointType bpType, UInt32 bpAddress, USBGecko gecko)
+        public bool Compare(Stream regStream, BreakpointType bpType, uint bpAddress, USBGecko gecko)
         {
             if (regStream.Length != 0x120)
                 return false;
             
             int spos = PRegister * 4;
 
-            UInt32 val = 0;
+            uint val = 0;
             if (spos == 0x120) //Value of address is supposed to be checked
             {
                 switch (bpType)
@@ -131,9 +131,9 @@ namespace GeckoApp
             return true;
         }
 
-        public override String ToString()
+        public override string ToString()
         {
-            String result = GroupNumber + ": ";
+            string result = GroupNumber + ": ";
             if(PRegister >= BPList.longRegNames.Length)
                 result += "VoA ";
             else
@@ -157,10 +157,10 @@ namespace GeckoApp
             return result;
         }
 
-        public static BreakpointCondition FromString(String cond)
+        public static BreakpointCondition FromString(string cond)
         {
-            if (cond == String.Empty) return null;
-            String[] sep = cond.Split(new char[] { ' ', ':' });
+            if (cond == string.Empty) return null;
+            string[] sep = cond.Split(new char[] { ' ', ':' });
             int register = Convert.ToInt32(BPList.regTextToID(sep[2]));
             
             if (sep[2] == "VoA") register = BPList.longRegNames.Length;
@@ -225,18 +225,18 @@ namespace GeckoApp
             UpdateOutput();
         }
 
-        public UInt32 GetIndexedConditionGroup(int index)
+        public uint GetIndexedConditionGroup(int index)
         {
             return PConditions[index].GroupNumber;
         }
 
-        public void SetIndexedConditionGroup(int index, UInt32 value)
+        public void SetIndexedConditionGroup(int index, uint value)
         {
             PConditions[index].GroupNumber = value;
             UpdateOutput();
         }
 
-        public bool Check(Stream regStream, BreakpointType bpType, UInt32 bpAddress, USBGecko gecko)
+        public bool Check(Stream regStream, BreakpointType bpType, uint bpAddress, USBGecko gecko)
         {
             if (!Enabled)
                 return true;
@@ -244,7 +244,7 @@ namespace GeckoApp
                 return true;
             if (regStream.Length != 0x120)
                 return false;
-            List<UInt32> groups = new List<uint>();
+            List<uint> groups = new List<uint>();
 
             // Fill it up with each groupNumber in the condition list
             foreach (BreakpointCondition cond in PConditions)
@@ -327,7 +327,7 @@ namespace GeckoApp
         private bool BPHit;
         private bool bpExact;
 
-        private UInt32 bpAddress;
+        private uint bpAddress;
         private BreakpointType bpType;
         private bool bpWait;
 
@@ -335,10 +335,10 @@ namespace GeckoApp
 
         private bool listSet;
         private bool stepOverPossible;
-        private UInt32 MemoryAccessAddress;
+        private uint MemoryAccessAddress;
         private ConditionalBranchState branchState;
-        private String[] currentInstruction;
-        private String currentInstructionAndAddress;
+        private string[] currentInstruction;
+        private string currentInstructionAndAddress;
 
         private int logIndent;
 
@@ -364,7 +364,7 @@ namespace GeckoApp
             get { return branchState; }
         }
 
-        public UInt32 MemoryAddress
+        public uint MemoryAddress
         {
             get { return MemoryAccessAddress; }
         }
@@ -382,13 +382,13 @@ namespace GeckoApp
             set { breakpointNext = value; }
         }
 
-        private UInt32 PHitAddress;
-        public UInt32 hitAddress
+        private uint PHitAddress;
+        public uint hitAddress
         {
             get { return PHitAddress; }
         }
 
-        private UInt32[] changableRegs;
+        private uint[] changableRegs;
 
         private BreakpointConditions PConditions;
 
@@ -439,7 +439,7 @@ namespace GeckoApp
             classicBox = UClassicBox;
             stepOverPossible = false;
 
-            changableRegs = new UInt32[40];
+            changableRegs = new uint[40];
 
             regDialog = new RegisterDialog();
 
@@ -491,7 +491,7 @@ namespace GeckoApp
 
             int tag = int.Parse(((Control)sender).Tag.ToString());
 
-            UInt32 value = changableRegs[tag];
+            uint value = changableRegs[tag];
 
             regDialog.TopMost = mainForm.TopMost;
 
@@ -520,9 +520,9 @@ namespace GeckoApp
         private void GetRegisters(Stream regStream)
         {
             regStream.Seek(0, SeekOrigin.Begin);
-            String regValue;
-            UInt32 rStream;
-            UInt32[] allReg = new UInt32[72];
+            string regValue;
+            uint rStream;
+            uint[] allReg = new uint[72];
             for (int i = 0; i < 72; i++)
             {
                 rStream = GlobalFunctions.ReadStream(regStream);
@@ -546,7 +546,7 @@ namespace GeckoApp
             listSet = true;
             regStream.Close();
 
-            String output = "";
+            string output = "";
             for (int i = 0; i < 72; i++)
             {
                 output += BPList.longRegNames[bpOutput.longRegIDs[i]] + ":" +
@@ -566,22 +566,22 @@ namespace GeckoApp
             // Otherwise we might not be pointing at any valid memory to pass to disassemble
             if (ValidMemory.validAddress(changableRegs[5]))
             {
-                UInt32 assAdd = changableRegs[5];
+                uint assAdd = changableRegs[5];
                 PHitAddress = assAdd;   // cache this for later
 
                 // Fill an array of strings with instructions
                 // TODO: subtract back some so we can see what comes BEFORE the assembly address...
-                String[] assembly = disassembler.DissToBox(assAdd);
+                string[] assembly = disassembler.DissToBox(assAdd);
 
                 // Grab the first (i.e. current) instruction
                 if (assembly.Length > 0)
                 {
-                    String fCommand = assembly[0];
+                    string fCommand = assembly[0];
                     currentInstructionAndAddress = fCommand;
                     fCommand = fCommand.Substring(20, fCommand.Length - 20);
 
                     // Split it along tabs so we can extract the operation
-                    String[] sep = fCommand.Split(new char[1] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] sep = fCommand.Split(new char[1] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
                     currentInstruction = sep;
                     fCommand = sep[0].ToLower();
 
@@ -597,7 +597,7 @@ namespace GeckoApp
             }
         }
 
-        private void InvokeDissBoxUpdate(String[] assembly)
+        private void InvokeDissBoxUpdate(string[] assembly)
         {
             // Make sure this assignment is carried out on the main thread,
             // where it has permission to modify the form's controls
@@ -616,7 +616,7 @@ namespace GeckoApp
             }
         }
 
-        private void InvokeClassicTextBoxUpdate(String output)
+        private void InvokeClassicTextBoxUpdate(string output)
         {
             if (classicBox.InvokeRequired)
             {
@@ -631,7 +631,7 @@ namespace GeckoApp
             }
         }
 
-        private void UpdateBranchState(String[] sep)
+        private void UpdateBranchState(string[] sep)
         {
             if (isConditionalBranch(sep))
             {
@@ -676,7 +676,7 @@ namespace GeckoApp
         }
 
 
-        private bool BranchTaken(String[] splitted)
+        private bool BranchTaken(string[] splitted)
         {
             // TODO: add bdnz etc
             if (splitted.Length == 1)
@@ -691,7 +691,7 @@ namespace GeckoApp
             // Remove the branch hint
             string command = splitted[0].ToLower().Trim(new char[2] { '+', '-' });
 
-            command = Regex.Replace(command, "lr$", String.Empty);
+            command = Regex.Replace(command, "lr$", string.Empty);
 
             if (command == "ble")
             {
@@ -721,7 +721,7 @@ namespace GeckoApp
             return false;
         }
 
-        private bool isConditionalBranch(String[] splitted)
+        private bool isConditionalBranch(string[] splitted)
         {
             string command = splitted[0].ToLower().Trim(new char[2] { '+', '-' });
             switch (command)
@@ -738,15 +738,15 @@ namespace GeckoApp
             }
         }
 
-        private void GetMemoryAddress(String[] splitted)
+        private void GetMemoryAddress(string[] splitted)
         {
             if (splitted.Length == 1) return;
             string command = splitted[0].ToLower();
 
             // If we're doing a load or store, calculate the address
             bool indexed = Regex.Match(command, "x$").Success;
-            command = Regex.Replace(command, "x$", String.Empty);
-            command = Regex.Replace(command, "u$", String.Empty);
+            command = Regex.Replace(command, "x$", string.Empty);
+            command = Regex.Replace(command, "u$", string.Empty);
             switch (command)
             {
                 case "stw":
@@ -772,7 +772,7 @@ namespace GeckoApp
                 case "lsw":
                 case "stswi":
                 case "lswi":
-                    String[] sep2 = splitted[1].Split(new char[3] { ',', '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] sep2 = splitted[1].Split(new char[3] { ',', '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
                     int offset;
                     uint pointer;
                     if (indexed)
@@ -916,7 +916,7 @@ namespace GeckoApp
             listSet = false;
         }
 
-        public bool SetBreakpoint(UInt32 address, BreakpointType type, bool exact, bool wait)
+        public bool SetBreakpoint(uint address, BreakpointType type, bool exact, bool wait)
         {
             try
             {
@@ -944,7 +944,7 @@ namespace GeckoApp
             }
         }
 
-        public bool SetBreakpoint(UInt32 address, BreakpointType type, bool exact)
+        public bool SetBreakpoint(uint address, BreakpointType type, bool exact)
         {
             return SetBreakpoint(address, type, exact, true);
         }
@@ -1000,7 +1000,7 @@ namespace GeckoApp
             return false;
         }
 
-        public UInt32 GetRegisterValue(int regIndex)
+        public uint GetRegisterValue(int regIndex)
         {
             if (regIndex >= BPList.longRegNames.Length)
                 return 0;
@@ -1009,22 +1009,22 @@ namespace GeckoApp
             return foo;
         }
 
-        public Single GetFloatRegisterValue(int regIndex)
+        public float GetFloatRegisterValue(int regIndex)
         {
-            Single foo = 0;
-            foo = Single.Parse(bpOutput.longRegTextBox[regIndex].Text);
+            float foo = 0;
+            foo = float.Parse(bpOutput.longRegTextBox[regIndex].Text);
             return foo;
         }
 
-        public String GetStepLog()
+        public string GetStepLog()
         {
-            String DetailedInstruction = currentInstructionAndAddress;
-            String regDetails;
+            string DetailedInstruction = currentInstructionAndAddress;
+            string regDetails;
             MatchCollection getRegDetails;
 
-            if (currentInstructionAndAddress == null) return String.Empty;
+            if (currentInstructionAndAddress == null) return string.Empty;
 
-            String[] Padding = DetailedInstruction.Split('\t');
+            string[] Padding = DetailedInstruction.Split('\t');
 
             // this will help align things
             if (Padding.Length < 3)
@@ -1064,8 +1064,8 @@ namespace GeckoApp
                 for (int i = 0; i < getRegDetails.Count; i++)
                 {
                     string floatReg = getRegDetails[i].Value;
-                    int index = Int32.Parse(floatReg.Substring(1)) + 40;
-                    Single floatVal = GetFloatRegisterValue(index);
+                    int index = int.Parse(floatReg.Substring(1)) + 40;
+                    float floatVal = GetFloatRegisterValue(index);
                     regDetails = floatReg + " = " + floatVal.ToString("G6");
                     //DetailedInstruction = DetailedInstruction.Insert(getRegDetails[i].Index + getRegDetails[i].Length, regDetails);
                     DetailedInstruction += "\t" + regDetails;
@@ -1077,7 +1077,7 @@ namespace GeckoApp
 
             for (int i = 0; i < getRegDetails.Count; i++)
             {
-                regDetails = getRegDetails[i].Value + " = " + GlobalFunctions.toHex(GetRegisterValue(Int32.Parse(getRegDetails[i].Value.Substring(1)) + 7));
+                regDetails = getRegDetails[i].Value + " = " + GlobalFunctions.toHex(GetRegisterValue(int.Parse(getRegDetails[i].Value.Substring(1)) + 7));
                 //DetailedInstruction = DetailedInstruction.Insert(getRegDetails[i].Index + getRegDetails[i].Length, regDetails);
                 DetailedInstruction += "\t" + regDetails;
             }
@@ -1130,7 +1130,7 @@ namespace GeckoApp
             return DetailedInstruction;
         }
 
-        public void SetSRR0(UInt32 address)
+        public void SetSRR0(uint address)
         {
             if (gecko.status() != WiiStatus.Breakpoint)
                 return;

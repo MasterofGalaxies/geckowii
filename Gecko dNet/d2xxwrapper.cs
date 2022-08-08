@@ -62,66 +62,66 @@ namespace D2XXDirect
         }
         
         // FT_Open_Ex Flags
-        private const UInt32 FT_OPEN_BY_SERIAL_NUMBER = 1;
-        private const UInt32 FT_OPEN_BY_DESCRIPTION = 2;
-        private const UInt32 FT_OPEN_BY_LOCATION = 4;
+        private const DWORD FT_OPEN_BY_SERIAL_NUMBER = 1;
+        private const DWORD FT_OPEN_BY_DESCRIPTION = 2;
+        private const DWORD FT_OPEN_BY_LOCATION = 4;
 
         // FT_List_Devices Flags
-        private const UInt32 FT_LIST_NUMBER_ONLY = 0x80000000;
-        private const UInt32 FT_LIST_BY_INDEX = 0x40000000;
-        private const UInt32 FT_LIST_ALL = 0x20000000;
+        private const DWORD FT_LIST_NUMBER_ONLY = 0x80000000;
+        private const DWORD FT_LIST_BY_INDEX = 0x40000000;
+        private const DWORD FT_LIST_ALL = 0x20000000;
         // Baud Rate Selection
-        private const UInt32 FT_BAUD_300 = 300;
-        private const UInt32 FT_BAUD_600 = 600;
-        private const UInt32 FT_BAUD_1200 = 1200;
-        private const UInt32 FT_BAUD_2400 = 2400;
-        private const UInt32 FT_BAUD_4800 = 4800;
-        private const UInt32 FT_BAUD_9600 = 9600;
-        private const UInt32 FT_BAUD_14400 = 14400;
-        private const UInt32 FT_BAUD_19200 = 19200;
-        private const UInt32 FT_BAUD_38400 = 38400;
-        private const UInt32 FT_BAUD_57600 = 57600;
-        private const UInt32 FT_BAUD_115200 = 115200;
-        private const UInt32 FT_BAUD_230400 = 230400;
-        private const UInt32 FT_BAUD_460800 = 460800;
-        private const UInt32 FT_BAUD_921600 = 921600;
+        private const DWORD FT_BAUD_300 = 300;
+        private const DWORD FT_BAUD_600 = 600;
+        private const DWORD FT_BAUD_1200 = 1200;
+        private const DWORD FT_BAUD_2400 = 2400;
+        private const DWORD FT_BAUD_4800 = 4800;
+        private const DWORD FT_BAUD_9600 = 9600;
+        private const DWORD FT_BAUD_14400 = 14400;
+        private const DWORD FT_BAUD_19200 = 19200;
+        private const DWORD FT_BAUD_38400 = 38400;
+        private const DWORD FT_BAUD_57600 = 57600;
+        private const DWORD FT_BAUD_115200 = 115200;
+        private const DWORD FT_BAUD_230400 = 230400;
+        private const DWORD FT_BAUD_460800 = 460800;
+        private const DWORD FT_BAUD_921600 = 921600;
         // Data Bits Selection
-        private const UInt32 FT_DATA_BITS_7 = 7;
-        private const UInt32 FT_DATA_BITS_8 = 8;
+        private const DWORD FT_DATA_BITS_7 = 7;
+        private const DWORD FT_DATA_BITS_8 = 8;
         // Stop Bits Selection
-        private const UInt32 FT_STOP_BITS_1 = 0;
-        private const UInt32 FT_STOP_BITS_2 = 2;
+        private const DWORD FT_STOP_BITS_1 = 0;
+        private const DWORD FT_STOP_BITS_2 = 2;
         // Parity Selection
-        private const UInt32 FT_PARITY_NONE = 0;
-        private const UInt32 FT_PARITY_ODD = 1;
-        private const UInt32 FT_PARITY_EVEN = 2;
-        private const UInt32 FT_PARITY_MARK = 3;
-        private const UInt32 FT_PARITY_SPACE = 4;
+        private const DWORD FT_PARITY_NONE = 0;
+        private const DWORD FT_PARITY_ODD = 1;
+        private const DWORD FT_PARITY_EVEN = 2;
+        private const DWORD FT_PARITY_MARK = 3;
+        private const DWORD FT_PARITY_SPACE = 4;
         // Flow Control Selection
-        private const UInt32 FT_FLOW_NONE = 0x0000;
-        private const UInt32 FT_FLOW_RTS_CTS = 0x0100;
-        private const UInt32 FT_FLOW_DTR_DSR = 0x0200;
-        private const UInt32 FT_FLOW_XON_XOFF = 0x0400;
+        private const DWORD FT_FLOW_NONE = 0x0000;
+        private const DWORD FT_FLOW_RTS_CTS = 0x0100;
+        private const DWORD FT_FLOW_DTR_DSR = 0x0200;
+        private const DWORD FT_FLOW_XON_XOFF = 0x0400;
         // Purge Commands
-        private const UInt32 FT_PURGE_RX = 1;
-        private const UInt32 FT_PURGE_TX = 2;
+        private const DWORD FT_PURGE_RX = 1;
+        private const DWORD FT_PURGE_TX = 2;
         // Notification Events
-        private const UInt32 FT_EVENT_RXCHAR = 1;
-        private const UInt32 FT_EVENT_MODEM_STATUS = 2;
+        private const DWORD FT_EVENT_RXCHAR = 1;
+        private const DWORD FT_EVENT_MODEM_STATUS = 2;
         // Modem Status
-        private const UInt32 CTS = 0x10;
-        private const UInt32 DSR = 0x20;
-        private const UInt32 RI = 0x40;
-        private const UInt32 DCD = 0x80;
+        private const DWORD CTS = 0x10;
+        private const DWORD DSR = 0x20;
+        private const DWORD RI = 0x40;
+        private const DWORD DCD = 0x80;
 
 
         // IO Buffer Sizes
-        public const UInt32 FT_In_Buffer_Size = 0x10000;    // 64k
-        public const UInt32 FT_In_Buffer_Index = FT_In_Buffer_Size - 1;
-        public const UInt32 FT_Out_Buffer_Size = 0x10000;    // 64k
-        public const UInt32 FT_Out_Buffer_Index = FT_Out_Buffer_Size - 1;
+        public const DWORD FT_In_Buffer_Size = 0x10000;    // 64k
+        public const DWORD FT_In_Buffer_Index = FT_In_Buffer_Size - 1;
+        public const DWORD FT_Out_Buffer_Size = 0x10000;    // 64k
+        public const DWORD FT_Out_Buffer_Index = FT_Out_Buffer_Size - 1;
         // DLL Name
-        public const String FT_DLL_Name = "FTD2XX.DLL";
+        public const string FT_DLL_Name = "FTD2XX.DLL";
 
         private FT_Handle handle;
 
@@ -135,13 +135,13 @@ namespace D2XXDirect
         private static extern FT_Result FT_ResetDevice(FT_Handle ftHandle);
 
         [DllImport(FT_DLL_Name)]
-        private static extern FT_Result FT_ListDevices(IntPtr pvArg1, IntPtr pvArg2, UInt32 dwFlags);
+        private static extern FT_Result FT_ListDevices(IntPtr pvArg1, IntPtr pvArg2, DWORD dwFlags);
 
         [DllImport(FT_DLL_Name)]
         private static extern FT_Result FT_SetTimeouts(FT_Handle ftHandle, DWORD dwReadTimeout, DWORD dwWriteTimeout);
 
         [DllImport(FT_DLL_Name)]
-        private static extern FT_Result FT_SetLatencyTimer(FT_Handle ftHandle, Byte ucTimer);
+        private static extern FT_Result FT_SetLatencyTimer(FT_Handle ftHandle, byte ucTimer);
 
         [DllImport(FT_DLL_Name)]
         private static extern FT_Result FT_SetUSBParameters(FT_Handle ftHandle, DWORD dwInTransferSize, DWORD dwOutTransferSize);
@@ -150,19 +150,19 @@ namespace D2XXDirect
         private static extern FT_Result FT_Purge(FT_Handle ftHandle, DWORD uEventCh);
 
         [DllImport(FT_DLL_Name)]
-        private static extern FT_Result FT_Read(FT_Handle ftHandle, IntPtr lpBuffer, DWORD dwBytesToRead, ref UInt32 lpdwBytesReturned);
+        private static extern FT_Result FT_Read(FT_Handle ftHandle, IntPtr lpBuffer, DWORD dwBytesToRead, ref DWORD lpdwBytesReturned);
 
         [DllImport(FT_DLL_Name)]
-        private static extern FT_Result FT_Write(FT_Handle ftHandle, IntPtr lpBuffer, DWORD dwBytesToWrite, ref UInt32 lpdwBytesWritten);
+        private static extern FT_Result FT_Write(FT_Handle ftHandle, IntPtr lpBuffer, DWORD dwBytesToWrite, ref DWORD lpdwBytesWritten);
 
         public D2XXWrapper()
         {
             handle = 0;
         }
 
-        public FT_STATUS OpenBySerialNumber(String serial)
+        public FT_STATUS OpenBySerialNumber(string serial)
         {
-            Byte[] serBytes = Encoding.ASCII.GetBytes(serial);
+            byte[] serBytes = Encoding.ASCII.GetBytes(serial);
 
             GCHandle pin = GCHandle.Alloc(serBytes, GCHandleType.Pinned);
             
@@ -173,9 +173,9 @@ namespace D2XXDirect
             return result;
         }
 
-        public FT_STATUS GetNumberOfDevices(ref UInt32 numberOfDevices)
+        public FT_STATUS GetNumberOfDevices(ref DWORD numberOfDevices)
         {
-            Byte[] arg1 = new Byte[4];
+            byte[] arg1 = new byte[4];
 
             GCHandle pin = GCHandle.Alloc(arg1, GCHandleType.Pinned);
             GCHandle pin2 = GCHandle.Alloc(null, GCHandleType.Pinned);
@@ -189,19 +189,19 @@ namespace D2XXDirect
             return ConvertResult(result);
         }
 
-        public FT_STATUS SetTimeouts(UInt32 readTimeout, UInt32 writeTimeout)
+        public FT_STATUS SetTimeouts(DWORD readTimeout, DWORD writeTimeout)
         {
             DWORD result = FT_SetTimeouts(handle, readTimeout, writeTimeout);
             return ConvertResult(result);
         }
 
-        public FT_STATUS SetLatencyTimer(Byte ucTimer)
+        public FT_STATUS SetLatencyTimer(byte ucTimer)
         {
             DWORD result = FT_SetLatencyTimer(handle, ucTimer);
             return ConvertResult(result);
         }
 
-        public FT_STATUS InTransferSize(UInt32 transfer)
+        public FT_STATUS InTransferSize(DWORD transfer)
         {
             DWORD result = FT_SetUSBParameters(handle, transfer, 0);
             return ConvertResult(result);
@@ -222,13 +222,13 @@ namespace D2XXDirect
             return ConvertResult(result);
         }
 
-        public FT_STATUS Purge(UInt32 eventCh)
+        public FT_STATUS Purge(DWORD eventCh)
         {
             DWORD result = FT_Purge(handle, eventCh);
             return ConvertResult(result);
         }
 
-        public FT_STATUS Read(Byte[] buffer, UInt32 nobytes, ref UInt32 bytes_read)
+        public FT_STATUS Read(byte[] buffer, DWORD nobytes, ref DWORD bytes_read)
         {
             GCHandle pin = GCHandle.Alloc(buffer, GCHandleType.Pinned);
             DWORD result = FT_Read(handle, pin.AddrOfPinnedObject(), nobytes, ref bytes_read);
@@ -236,9 +236,9 @@ namespace D2XXDirect
             return ConvertResult(result);
         }
 
-        public FT_STATUS Write(Byte[] buffer, Int32 nobytes, ref UInt32 bytes_written)
+        public FT_STATUS Write(byte[] buffer, int nobytes, ref DWORD bytes_written)
         {
-            UInt32 sendBytes = (UInt32)nobytes;
+            DWORD sendBytes = (DWORD)nobytes;
             GCHandle pin = GCHandle.Alloc(buffer, GCHandleType.Pinned);
             DWORD result = FT_Write(handle, pin.AddrOfPinnedObject(), sendBytes, ref bytes_written);
             pin.Free();

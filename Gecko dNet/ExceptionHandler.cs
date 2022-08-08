@@ -45,7 +45,7 @@ namespace GeckoApp
             // If the result has no (, then it we failed, so be loud
             mainForm.DisconnectButton_Click(mainForm, new EventArgs());
             EUSBErrorCode error = exc.ErrorCode;
-            String msg = "";
+            string msg = "";
             switch (error)
             {
                 case EUSBErrorCode.CheatStreamSizeInvalid: msg = "Cheat stream size is invalid!"; break;

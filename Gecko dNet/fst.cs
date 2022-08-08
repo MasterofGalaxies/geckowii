@@ -12,17 +12,17 @@ namespace GeckoApp
 {
     public class subFile:IComparable<subFile>
     {
-        private String PName;
+        private string PName;
         private int PTag;
         private fileStructure PParent;
-        public String name { 
+        public string name { 
             get { return PName; }
             set { PName = value; }
         }
         public int tag { get { return PTag; } }
         public fileStructure parent { get { return PParent; } }
 
-        public subFile(String name, int tag,fileStructure parent)
+        public subFile(string name, int tag,fileStructure parent)
         {
             PName = name;
             PTag = tag;
@@ -31,25 +31,25 @@ namespace GeckoApp
 
         public int CompareTo(subFile other)
         {
-            return String.Compare(this.name, other.name);
+            return string.Compare(this.name, other.name);
         }
     }
 
     public class fileStructure:IComparable<fileStructure>
     {        
-        private String PName;
+        private string PName;
         private int PTag;
         private fileStructure PParent;
         List<fileStructure> subFolders;
         List<subFile> subFiles;
-        public String name { 
+        public string name { 
             get { return PName; }
             set { PName = value; }
         }
         public int tag { get { return PTag; } }
         public fileStructure parent { get { return PParent; } }
 
-        private fileStructure(String name,int tag,fileStructure parent)
+        private fileStructure(string name,int tag,fileStructure parent)
         {
             PName = name;
             PTag = tag;
@@ -58,17 +58,17 @@ namespace GeckoApp
             subFolders = new List<fileStructure>();
         }
 
-        public fileStructure(String name, int tag) : this(name,tag,null)
+        public fileStructure(string name, int tag) : this(name,tag,null)
         { }
 
-        public fileStructure addSubFolder(String name, int tag)
+        public fileStructure addSubFolder(string name, int tag)
         {
             fileStructure nFS = new fileStructure(name, tag, this);
             subFolders.Add(nFS);
             return nFS;
         }
 
-        public void addFile(String name, int tag)
+        public void addFile(string name, int tag)
         {
             subFile nSF = new subFile(name, tag, this);
             subFiles.Add(nSF);
@@ -76,7 +76,7 @@ namespace GeckoApp
 
         public int CompareTo(fileStructure other)
         {
-            return String.Compare(this.name, other.name);
+            return string.Compare(this.name, other.name);
         }
 
         public void Sort()
@@ -146,15 +146,15 @@ namespace GeckoApp
 
     public class fstEntry
     {
-        public UInt32 dataAddress;
-        public UInt32 nameOffset;
-        public UInt32 offset;
-        public UInt32 entries;
+        public uint dataAddress;
+        public uint nameOffset;
+        public uint offset;
+        public uint entries;
 
-        public UInt32 nameAddress;
+        public uint nameAddress;
 
-        public fstEntry(UInt32 UDataAddress, UInt32 UNameOffset, UInt32 UOffset,
-            UInt32 UEntries, UInt32 UNameAddress)
+        public fstEntry(uint UDataAddress, uint UNameOffset, uint UOffset,
+            uint UEntries, uint UNameAddress)
         {
             dataAddress = UDataAddress;
             nameOffset = UNameOffset;
@@ -186,7 +186,7 @@ namespace GeckoApp
         private Label targetFileName;
         private TextBox generatedSwapCode;
         private int selectedFile;
-        private String selFile;
+        private string selFile;
 
         public FST(USBGecko UGecko, TreeView UTreeView, TextBox UFileSwapCode,
             Button USetAsSourceButton, Button USetAsTargetButton, Button UGenerateFileSwap,
@@ -196,7 +196,7 @@ namespace GeckoApp
             exceptionHandling = UExceptionHandling;
             imgList = new ImageList();
 #if !MONO
-            System.Drawing.Icon ni = IconReader.GetFolderIcon(IconReader.IconSize.Small,
+            Icon ni = IconReader.GetFolderIcon(IconReader.IconSize.Small,
                 IconReader.FolderType.Closed);
             imgList.Images.Add(ni);
             ni = IconReader.GetFolderIcon(IconReader.IconSize.Small,
@@ -238,15 +238,15 @@ namespace GeckoApp
             selectedFile = -1;
         }
 
-        private String ReadString(Stream inputStream)
+        private string ReadString(Stream inputStream)
         {
-            Byte[] buffer = new Byte[1];
-            String result="";
+            byte[] buffer = new byte[1];
+            string result ="";
             do
             {
                 inputStream.Read(buffer, 0, 1);
                 if (buffer[0] != 0)
-                    result += (Char)buffer[0];
+                    result += (char)buffer[0];
             } while (buffer[0] != 0);
             //result += " ";
 
@@ -263,7 +263,7 @@ namespace GeckoApp
         public void DumpTree()
         {
             //address will be alligned to 4
-            UInt32 paddress=0x80000038;
+            uint paddress =0x80000038;
 
             //Create a memory stream for the actual dump
             MemoryStream stream = new MemoryStream();
@@ -276,15 +276,15 @@ namespace GeckoApp
 
                 //go to beginning
                 stream.Seek(0, SeekOrigin.Begin);
-                Byte[] buffer = new Byte[8];
+                byte[] buffer = new byte[8];
                 stream.Read(buffer, 0, 8);
 
                 //Stream can be cleared now
                 stream.Close();
 
                 //Read buffer
-                UInt32 fstadd = BitConverter.ToUInt32(buffer, 0);
-                UInt32 fstsize = BitConverter.ToUInt32(buffer, 4);
+                uint fstadd = BitConverter.ToUInt32(buffer, 0);
+                uint fstsize = BitConverter.ToUInt32(buffer, 4);
 
                 //Swap to machine endianness and return
                 fstadd = ByteSwap.Swap(fstadd);
@@ -293,26 +293,26 @@ namespace GeckoApp
                 stream = new MemoryStream();
                 gecko.Dump(fstadd, fstadd + fstsize + 1, stream);
                 stream.Seek(-1, SeekOrigin.End);
-                buffer = new Byte[] { 0xFF };
+                buffer = new byte[] { 0xFF };
                 stream.Write(buffer, 0, 1);
 
                 stream.Seek(0, SeekOrigin.Begin);
-                buffer = new Byte[0xC];
+                buffer = new byte[0xC];
                 stream.Read(buffer, 0, 12);
 
-                Byte flag = buffer[0];
-                UInt32 truenameoff;
+                byte flag = buffer[0];
+                uint truenameoff;
                 buffer[0] = 0;
-                UInt32 nameoff = ByteSwap.Swap(BitConverter.ToUInt32(buffer, 0));
-                UInt32 offset = ByteSwap.Swap(BitConverter.ToUInt32(buffer, 4));
-                UInt32 entries = ByteSwap.Swap(BitConverter.ToUInt32(buffer, 8));
+                uint nameoff = ByteSwap.Swap(BitConverter.ToUInt32(buffer, 0));
+                uint offset = ByteSwap.Swap(BitConverter.ToUInt32(buffer, 4));
+                uint entries = ByteSwap.Swap(BitConverter.ToUInt32(buffer, 8));
                 long fstpos = stream.Position;
-                UInt32 strpos = entries * 0x0C;
-                UInt32 endpos = strpos;
+                uint strpos = entries * 0x0C;
+                uint endpos = strpos;
 
                 //List<TreeNode> rootArr = new List<TreeNode>();
                 List<fileStructure> rootArr = new List<fileStructure>();
-                List<UInt32> dirSize = new List<UInt32>();
+                List<uint> dirSize = new List<uint>();
                 dirSize.Add(0);
 
                 fstTextPositions.Clear();
@@ -334,7 +334,7 @@ namespace GeckoApp
                 int tag;
                 int curDir = 0;
                 rootArr.Add(current);
-                String nname;
+                string nname;
                 do
                 {
                     stream.Seek(fstpos, SeekOrigin.Begin);
@@ -347,8 +347,8 @@ namespace GeckoApp
                     offset = ByteSwap.Swap(BitConverter.ToUInt32(buffer, 4));
                     entries = ByteSwap.Swap(BitConverter.ToUInt32(buffer, 8));
 
-                    fstTextPositions.Add(new fstEntry((UInt32)fstpos + fstadd,
-                        truenameoff, offset, entries, (UInt32)fstpos + strpos + nameoff));
+                    fstTextPositions.Add(new fstEntry((uint)fstpos + fstadd,
+                        truenameoff, offset, entries, (uint)fstpos + strpos + nameoff));
                     tag = fstTextPositions.Count - 1;
 
                     fstpos = stream.Position;
@@ -410,7 +410,7 @@ namespace GeckoApp
             if (e.Node != null && e.Node.Tag != null && int.TryParse(e.Node.Tag.ToString(), out tag)
                 && tag != -1)
             {
-                UInt32 code = fstTextPositions[tag].dataAddress - 0x79FFFFFC;
+                uint code = fstTextPositions[tag].dataAddress - 0x79FFFFFC;
                 fileSwapCode.Text =
                     GlobalFunctions.toHex(code) + " 00000008\r\n" +
                     GlobalFunctions.toHex(fstTextPositions[tag].offset) + " " +
@@ -433,7 +433,7 @@ namespace GeckoApp
             if (selectedFile == -1)
                 return;
             fstEntry oldSource = sourceFile;
-            String oldSourceFile = sourceFileName.Text;
+            string oldSourceFile = sourceFileName.Text;
             sourceFile = fstTextPositions[selectedFile];
             if (targetFile == sourceFile)
             {
@@ -462,7 +462,7 @@ namespace GeckoApp
             if (selectedFile == -1)
                 return;
             fstEntry oldTarget = targetFile;
-            String oldTargetFile = targetFileName.Text;
+            string oldTargetFile = targetFileName.Text;
             targetFile = fstTextPositions[selectedFile];
             if (targetFile == sourceFile)
             {
@@ -490,7 +490,7 @@ namespace GeckoApp
         {
             if (sourceFile == null || targetFile == null)
                 return;
-            UInt32 code = sourceFile.dataAddress - 0x79FFFFFC;
+            uint code = sourceFile.dataAddress - 0x79FFFFFC;
             generatedSwapCode.Text =
                 GlobalFunctions.toHex(code) + " 00000008\r\n" +
                 GlobalFunctions.toHex(targetFile.offset) + " " +
